@@ -96,5 +96,31 @@ def fund_details(fund_id):
 
 @app.route('/top-funds', methods=['POST'])
 def get_top_funds():
-    # ...
-    return jsonify({})
+    print("\n--- Received request for /top-funds ---") # LOGGING
+    try:
+        data = request.get_json()
+        category = data.get('category', 'large_cap')
+        print(f"DEBUG: Category requested: {category}") # LOGGING
+        
+        top_funds = analyzer.get_top_funds(category)
+        
+        # LOGGING: Check what the analyzer returned
+        print(f"DEBUG: Found {len(top_funds)} funds for category '{category}'.")
+
+        return jsonify({
+            'success': True,
+            'funds': top_funds
+        })
+        
+    except Exception as e:
+        # LOGGING: This will now clearly log the exact error to Vercel
+        print(f"!!!!!!!!!!!!!! CRITICAL ERROR IN /top-funds ROUTE !!!!!!!!!!!!!!")
+        import traceback
+        traceback.print_exc() # This prints the full error traceback
+        print(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        
+        # Return a clear error message to the frontend
+        return jsonify({
+            'success': False,
+            'error': f"A server error occurred: {str(e)}"
+        }), 500
