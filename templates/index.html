@@ -1308,7 +1308,7 @@
 
             // Display risk profile
             const riskProfile = document.getElementById('riskProfile');
-            riskProfile.textContent = `Risk Profile: ${data.recommendations.risk_profile.toUpperCase()}`;
+            riskProfile.textContent = `Risk Profile: ${data.recommendations.risk_profile?.toUpperCase() || 'N/A'}`;
             riskProfile.className = `risk-profile risk-${data.recommendations.risk_profile}`;
 
             // Display AI summary
