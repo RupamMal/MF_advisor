@@ -48,17 +48,10 @@ def analyze():
                 fund['grow_url'] = analyzer.get_grow_url(fund['name'])
         
         # --- DIAGNOSTIC STEP: THE REAL AI CALL IS DISABLED ---
-        print("DEBUG: Step 2 - SKIPPING REAL LLM CALL FOR DIAGNOSTICS.")
-        # llm_analysis = llm_recommender.generate_recommendations(user_info, recommendations)
-        
-        # Using placeholder data to prevent external API crash
-        llm_analysis = {
-            "summary": "This is a placeholder summary. If you see this, the application logic is working.",
-            "key_insights": ["The external AI call is temporarily disabled for debugging."],
-            "suggested_allocations": recommendations.get("allocations", {}),
-            "sections": {"investment_thesis": "Placeholder thesis."}
-        }
-        print("DEBUG: Step 2 - Using dummy LLM data.")
+        # --- THIS IS THE FINAL, LIVE VERSION ---
+        print("DEBUG: Step 2 - Calling REAL LLMRecommender...")
+        llm_analysis = llm_recommender.generate_recommendations(user_info, recommendations)
+        print("DEBUG: Step 2 - LLMRecommender finished successfully.")
         
         response_data = {
             'success': True,
