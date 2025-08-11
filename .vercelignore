@@ -14,9 +14,11 @@ docs/
 *.dist-info/
 *.egg-info/
 
-# Specifically target large libraries like pandas and numpy
+# Specifically target large libraries like pandas, numpy, and scipy
 pandas/tests/*
 numpy/tests/*
+scipy/tests/*
+scipy/sparse/tests/*
 
 # Ignore compiled object files that are not needed at runtime
 *.so
