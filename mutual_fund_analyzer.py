@@ -112,5 +112,6 @@ class MutualFundAnalyzer:
 
         return {
             'recommendations': recommendations,
-            'allocations': alloc
+            'allocations': alloc,
+            'risk_profile" : risk,
         }
