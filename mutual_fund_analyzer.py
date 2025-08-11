@@ -28,14 +28,38 @@ class MutualFundAnalyzer:
         return returns_score + risk_adjusted_score + expense_score + alpha_score
 
 
-
     def get_top_funds(self, category='large_cap', top_n=5):
-        # ... (this function is fine)
-        df = self.funds[self.funds['category'] == category].copy()
+        # Start with a full copy of the funds data.
+        df = self.funds.copy()
+
+        # --- START OF FIX ---
+        # First, a safety check: if the main data is empty, return an empty list now.
         if df.empty:
-            df = self.funds.copy()
+            print("WARNING: The main funds dataframe is empty. Cannot get top funds.")
+            return []
+
+        # Filter by the requested category.
+        # This correctly handles the case where the user selects a specific category.
+        if category and category in df['category'].unique():
+            df = df[df['category'] == category]
+
+        # Second safety check: if the *filtered* dataframe is empty, return an empty list.
+        # This happens if a category has no funds.
+        if df.empty:
+            print(f"WARNING: No funds were found for the category '{category}'.")
+            return []
+
+        # If we have funds, proceed to score them.
+        # This uses the score_fund function we fixed earlier.
         df['score'] = df.apply(self.score_fund, axis=1)
-        return df.head(top_n).to_dict(orient='records')
+        
+        # Sort the dataframe by the new 'score' column in descending order.
+        df_sorted = df.sort_values('score', ascending=False)
+        
+        # Return the top N results as a list of dictionaries.
+        return df_sorted.head(top_n).to_dict(orient='records')
+        # --- END OF FIX ---
+
 
     def get_fund_details(self, fund_id):
         # ... (this function is fine)
