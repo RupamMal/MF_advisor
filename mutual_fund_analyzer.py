@@ -20,17 +20,14 @@ class MutualFundAnalyzer:
         return f"https://www.google.com/search?q={safe_name}+mutual+fund"
 
     def score_fund(self, row):
-        # ... (this function is fine)
-        # This is the correct scoring function
-        # It uses .get() to avoid errors if a column is missing
         returns_score = row.get('sip_5yr_return', 0) * 0.4
         risk_adjusted_score = row.get('sharpe_ratio', 0) * 10 * 0.25
-        expense_score = (2 - row.get('expense_ratio', 2)) * 0.15 # Lower is better
+        expense_score = (2 - row.get('expense_ratio', 2)) * 0.15 # Lower expense ratio is better
         alpha_score = row.get('alpha', 0) * 0.2
     
-    return returns_score + risk_adjusted_score + expense_score + alpha_score
-        
-        return 0
+        return returns_score + risk_adjusted_score + expense_score + alpha_score
+
+
 
     def get_top_funds(self, category='large_cap', top_n=5):
         # ... (this function is fine)
