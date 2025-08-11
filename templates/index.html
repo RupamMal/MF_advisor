@@ -873,13 +873,25 @@
 
                 <!-- Detailed Analysis -->
                 <div class="card">
-                    <div class="card-header">
-                        <h5><i class="fas fa-file-alt"></i> Detailed Analysis</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="detailedAnalysis"></div>
-                    </div>
-                </div>
+                    <div class="card-header"><h5><i class="fas fa-file-alt"></i> Detailed Analysis</h5></div>
+                    <div class="card-body">`;
+                
+                for (const [sectionName, content] of Object.entries(llm_analysis.sections)) {
+                    // Create a user-friendly title from the section key (e.g., 'investment_thesis' -> 'Investment Thesis')
+                    const title = sectionName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    html += `
+                        <div class="mb-4">
+                            <h6><strong>${title}</strong></h6>
+                            <p>${content}</p>
+                        </div>
+                    `;
+                }
+                html += `</div></div>`;
+            }
+            // --- END OF NEW CODE ---
+
+            container.innerHTML = html;
+        }
 
                 <!-- Download Report -->
                 <div class="card">
