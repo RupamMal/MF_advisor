@@ -1,0 +1,16 @@
+# Ignore the virtual environment
+venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore testing and documentation files from installed packages
+**/tests/
+**/test/
+*.dist-info/
+*.egg-info/
+
+# Prune Pandas and NumPy to reduce size
+pandas/tests/*
+numpy/tests/*
