@@ -1,0 +1,14 @@
+# Use a modern Python runtime
+runtime: python311
+
+# The entrypoint is the command used to start your application.
+# It uses Gunicorn, a production-grade web server.
+# -b :$PORT binds the server to the port provided by App Engine.
+# app:app refers to the 'app' Flask object inside your 'app.py' file.
+entrypoint: gunicorn -b :$PORT app:app
+
+# Set environment variables securely through the Google Cloud console or gcloud CLI.
+# This is a placeholder section to remind you.
+# env_variables:
+#   GEMINI_API_KEY: "YOUR_API_KEY_HERE"
+#   SECRET_KEY: "YOUR_SECRET_KEY_HERE"

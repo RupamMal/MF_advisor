@@ -1,0 +1,8 @@
+id,name,category,nav,aum_cr,expense_ratio,returns_1y,returns_3y,returns_5y,alpha,beta,sharpe,sortino,esg_score,min_investment,fund_manager,sip_5yr_return,sip_10yr_return,volatility_rank,peer_rank
+F001,SBI BlueChip Fund - Direct Plan,large_cap,85.2,45000,0.85,15.2,14.8,16.1,1.5,0.92,1.2,1.5,7.5,500,Sohini Andani,17.5,18.2,low,1
+F002,Parag Parikh Flexi Cap Fund - Direct Plan,flexi_cap,72.5,65000,0.6,22.1,25.4,21.8,5.2,0.78,1.8,2.2,8.1,1000,Rajeev Thakkar,23.1,20.5,moderate,1
+F003,Axis Midcap Fund - Direct Plan,mid_cap,110.1,28000,0.55,18.5,22.1,20.5,3.1,0.85,1.6,1.9,7.2,500,Shreyas Devalkar,21.8,22.3,moderate,2
+F004,Quant Small Cap Fund - Direct Plan,small_cap,270.3,20000,0.77,35.2,45.8,33.1,8.5,0.99,2.5,3.1,6.5,1000,Ankit Pande,40.1,29.8,high,1
+F005,ICICI Prudential All Seasons Bond Fund,debt,30.7,12000,0.4,7.1,6.8,7.5,-0.5,0.5,0.8,1.1,8.5,100,Manish Banthia,7.2,7.8,low,3
+F006,Canara Robeco Bluechip Equity Fund - Direct,large_cap,60.1,12500,0.45,14.8,15.5,17.2,1.8,0.90,1.3,1.6,7.8,500,Vishal Mishra,18.1,18.9,low,2
+F007,Mirae Asset Tax Saver Fund - Direct,tax_saving,50.2,15000,0.5,16.5,18.9,19.2,2.5,0.88,1.5,1.8,8.0,500,Neelesh Surana,20.5,21.1,moderate,1
