@@ -3,14 +3,21 @@ venv/
 
 # Ignore Python cache files
 __pycache__/
+**/__pycache__
 *.pyc
 
-# Ignore testing and documentation files from installed packages
+# More aggressively ignore docs and tests from ALL installed packages
 **/tests/
 **/test/
+doc/
+docs/
 *.dist-info/
 *.egg-info/
 
-# Prune Pandas and NumPy to reduce size
+# Specifically target large libraries like pandas and numpy
 pandas/tests/*
 numpy/tests/*
+
+# Ignore compiled object files that are not needed at runtime
+*.so
+*.pyd
