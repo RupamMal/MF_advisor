@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 import traceback
 
-# Load environment variables first
 load_dotenv()
 
 from mutual_fund_analyzer import MutualFundAnalyzer
@@ -35,7 +34,7 @@ def analyze():
     try:
         data = request.get_json()
         
-        # --- Updated to receive all fields from the full form ---
+        # --- Updated to receive ALL fields from the detailed form ---
         user_info = {
             'name': data.get('name', 'User'),
             'age': data.get('age', 30),
@@ -43,10 +42,18 @@ def analyze():
             'investment_amount': data.get('investment_amount', 50000),
             'risk_tolerance': data.get('risk_tolerance', 'moderate'),
             'investment_goal': data.get('investment_goal', 'wealth_creation'),
+            'investment_horizon': data.get('investment_horizon', '5-10'),
+            'monthly_sip': data.get('monthly_sip', 0),
+            'existing_investments': data.get('existing_investments', 0),
+            'tax_bracket': data.get('tax_bracket', 30),
+            'emergency_fund': data.get('emergency_fund', 'yes'),
+            'fund_type_preference': data.get('fund_type_preference', 'direct'),
+            'esg_preference': data.get('esg_preference', 'no_preference'),
+            'dividend_preference': data.get('dividend_preference', 'growth'),
         }
         print(f"DEBUG: Processing user_info: {user_info}")
         
-        # --- Re-enabled the LIVE AI call ---
+        # --- Using the LIVE AI call ---
         print("DEBUG: Getting basic recommendations...")
         recommendations = analyzer.get_recommendations(user_info)
         
