@@ -1,8 +1,23 @@
-id,name,category,nav,aum_cr,expense_ratio,returns_1y,returns_3y,returns_5y,alpha,beta,sharpe,sortino,esg_score,min_investment,fund_manager,sip_5yr_return,sip_10yr_return,volatility_rank,peer_rank
+id,name,category,nav,aum_cr,expense_ratio,returns_1y,returns_3y,returns_5y,alpha,beta,sharpe_ratio,sortino_ratio,esg_score,min_investment,fund_manager,sip_5yr_return,sip_10yr_return,volatility_rank,peer_rank
 F001,SBI BlueChip Fund - Direct Plan,large_cap,85.2,45000,0.85,15.2,14.8,16.1,1.5,0.92,1.2,1.5,7.5,500,Sohini Andani,17.5,18.2,low,1
-F002,Parag Parikh Flexi Cap Fund - Direct Plan,flexi_cap,72.5,65000,0.6,22.1,25.4,21.8,5.2,0.78,1.8,2.2,8.1,1000,Rajeev Thakkar,23.1,20.5,moderate,1
-F003,Axis Midcap Fund - Direct Plan,mid_cap,110.1,28000,0.55,18.5,22.1,20.5,3.1,0.85,1.6,1.9,7.2,500,Shreyas Devalkar,21.8,22.3,moderate,2
-F004,Quant Small Cap Fund - Direct Plan,small_cap,270.3,20000,0.77,35.2,45.8,33.1,8.5,0.99,2.5,3.1,6.5,1000,Ankit Pande,40.1,29.8,high,1
-F005,ICICI Prudential All Seasons Bond Fund,debt,30.7,12000,0.4,7.1,6.8,7.5,-0.5,0.5,0.8,1.1,8.5,100,Manish Banthia,7.2,7.8,low,3
-F006,Canara Robeco Bluechip Equity Fund - Direct,large_cap,60.1,12500,0.45,14.8,15.5,17.2,1.8,0.90,1.3,1.6,7.8,500,Vishal Mishra,18.1,18.9,low,2
-F007,Mirae Asset Tax Saver Fund - Direct,tax_saving,50.2,15000,0.5,16.5,18.9,19.2,2.5,0.88,1.5,1.8,8.0,500,Neelesh Surana,20.5,21.1,moderate,1
+F002,ICICI Prudential Bluechip Fund - Direct,large_cap,92.5,52000,0.91,14.9,15.1,16.5,1.7,0.90,1.3,1.6,7.8,100,Anish Tawakley,17.8,18.5,low,2
+F003,HDFC Top 100 Fund - Direct Plan,large_cap,1050.1,33000,1.05,13.8,14.5,15.8,1.2,0.95,1.1,1.4,7.2,100,Rahul Baijal,17.1,17.9,low,3
+F004,Axis Bluechip Fund - Direct Plan,large_cap,55.7,35000,0.52,16.1,13.5,15.5,1.9,0.88,1.4,1.7,8.0,500,Shreyas Devalkar,16.9,17.5,low,4
+F005,Mirae Asset Large Cap Fund - Direct Plan,large_cap,110.3,38000,0.55,15.8,15.2,16.8,2.1,0.89,1.5,1.8,8.2,1000,Gaurav Misra,18.2,19.1,low,5
+F010,Parag Parikh Flexi Cap Fund - Direct Plan,flexi_cap,72.5,65000,0.6,22.1,25.4,21.8,5.2,0.78,1.8,2.2,8.1,1000,Rajeev Thakkar,23.1,20.5,moderate,1
+F011,Quant Flexi Cap Fund - Direct Plan,flexi_cap,105.2,6000,0.57,25.5,28.9,24.1,6.1,0.85,2.1,2.5,6.9,1000,Ankit Pande,25.5,22.1,high,2
+F012,HDFC Flexi Cap Fund - Direct Plan,flexi_cap,1650.7,49000,0.82,19.8,21.5,19.5,4.5,0.82,1.7,2.0,7.5,100,Roshi Jain,21.1,19.8,moderate,3
+F013,UTI Flexi Cap Fund - Direct Plan,flexi_cap,280.9,25000,0.9,18.9,20.1,18.8,3.9,0.84,1.6,1.9,7.3,500,Ajay Tyagi,20.5,19.2,moderate,4
+F014,PGIM India Flexi Cap Fund - Direct,flexi_cap,60.1,9000,0.45,21.2,23.1,20.9,4.8,0.80,1.9,2.3,7.7,1000,Aniruddha Naha,22.5,20.1,moderate,5
+F020,Axis Midcap Fund - Direct Plan,mid_cap,110.1,28000,0.55,18.5,22.1,20.5,3.1,0.95,1.6,1.9,7.2,500,Shreyas Devalkar,21.8,22.3,moderate,1
+F021,Kotak Emerging Equity Fund - Direct,mid_cap,115.3,40000,0.45,17.9,21.8,20.1,2.9,0.92,1.5,1.8,7.6,100,Pankaj Tibrewal,21.5,21.9,moderate,2
+F022,PGIM India Midcap Opp Fund - Direct,mid_cap,65.8,15000,0.42,20.1,24.5,22.3,4.2,0.90,1.8,2.2,7.4,1000,Aniruddha Naha,23.1,23.5,high,3
+F023,HDFC Mid-Cap Opportunities Fund - Direct,mid_cap,180.2,60000,0.75,16.5,20.5,19.8,2.5,0.98,1.4,1.7,7.1,100,Chirag Setalvad,20.9,21.2,moderate,4
+F024,SBI Magnum Midcap Fund - Direct,mid_cap,220.7,18000,0.95,17.2,21.1,19.9,2.7,0.96,1.5,1.8,7.3,500,Sohini Andani,21.2,21.5,moderate,5
+F030,Quant Small Cap Fund - Direct Plan,small_cap,270.3,20000,0.77,35.2,45.8,33.1,8.5,0.99,2.5,3.1,6.5,1000,Ankit Pande,40.1,29.8,high,1
+F031,Nippon India Small Cap Fund - Direct,small_cap,160.5,45000,0.7,30.5,38.9,28.5,7.5,1.05,2.2,2.8,6.8,100,Samir Rachh,35.5,27.1,high,2
+F032,Axis Small Cap Fund - Direct Plan,small_cap,95.1,18000,0.55,28.9,35.1,27.8,7.1,0.92,2.1,2.6,7.5,500,Anupam Tiwari,33.1,26.5,high,3
+F033,HDFC Small Cap Fund - Direct Plan,small_cap,130.8,25000,0.72,27.8,33.5,26.9,6.8,0.95,2.0,2.5,7.0,100,Chirag Setalvad,32.5,25.9,high,4
+F034,Kotak Small Cap Fund - Direct Plan,small_cap,250.2,14000,0.48,29.1,36.2,28.1,7.3,0.93,2.2,2.7,7.2,1000,Pankaj Tibrewal,34.1,26.8,high,5
+F040,ICICI Prudential All Seasons Bond Fund,debt,30.7,12000,0.4,7.1,6.8,7.5,-0.5,0.5,0.8,1.1,8.5,100,Manish Banthia,7.2,7.8,low,1
+F050,Mirae Asset Tax Saver Fund - Direct,tax_saving,50.2,15000,0.5,16.5,18.9,19.2,2.5,0.88,1.5,1.8,8.0,500,Neelesh Surana,20.5,21.1,moderate,1
