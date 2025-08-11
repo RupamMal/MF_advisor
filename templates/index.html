@@ -1333,8 +1333,9 @@
             // Display advanced analysis
             displayAdvancedAnalysis(data.recommendations.advanced_analysis);
 
-            // Display detailed analysis
-            displayDetailedAnalysis(data.llm_analysis.sections);
+            if (data.recommendations.advanced_analysis) {
+            displayAdvancedAnalysis(data.recommendations.advanced_analysis);
+            }
         }
 
         function createAllocationChart(allocations) {
