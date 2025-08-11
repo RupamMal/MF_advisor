@@ -1300,43 +1300,57 @@
         function displayResults(data) {
             // Display user info
             document.getElementById('userName').textContent = data.user_info.name;
-            document.getElementById('userAge').textContent = data.user_info.age;
-            document.getElementById('userIncome').textContent = data.user_info.annual_income.toLocaleString();
-            document.getElementById('userInvestment').textContent = data.user_info.investment_amount.toLocaleString();
-            document.getElementById('userRisk').textContent = data.user_info.risk_tolerance;
-            document.getElementById('userHorizon').textContent = data.user_info.investment_horizon;
+document.getElementById('userAge').textContent = data.user_info.age;
+document.getElementById('userIncome').textContent = data.user_info.annual_income.toLocaleString();
+document.getElementById('userInvestment').textContent = data.user_info.investment_amount.toLocaleString();
+document.getElementById('userRisk').textContent = data.user_info.risk_tolerance;
+document.getElementById('userHorizon').textContent = data.user_info.investment_horizon;
 
-            // Display risk profile
-            const riskProfile = document.getElementById('riskProfile');
-            riskProfile.textContent = `Risk Profile: ${data.recommendations.risk_profile?.toUpperCase() || 'N/A'}`;
-            riskProfile.className = `risk-profile risk-${data.recommendations.risk_profile}`;
+// --- START OF FIX ---
+// First, check if the core data we need exists
+if (data.recommendations && data.llm_analysis) {
+    // Display risk profile
+    const riskProfile = document.getElementById('riskProfile');
+    // Check for risk_profile before using it
+    if (data.recommendations.risk_profile) {
+        riskProfile.textContent = `Risk Profile: ${data.recommendations.risk_profile.toUpperCase()}`;
+        riskProfile.className = `risk-profile risk-${data.recommendations.risk_profile}`;
+    }
 
-            // Display AI summary
-            document.getElementById('aiSummary').innerHTML = data.llm_analysis.summary;
+    // Display AI summary
+    document.getElementById('aiSummary').innerHTML = data.llm_analysis.summary;
 
-            // Display key insights
-            const insightsHtml = data.llm_analysis.key_insights.map(insight => 
-                `<div class="insight-card"><i class="fas fa-star"></i> ${insight}</div>`
-            ).join('');
-            document.getElementById('keyInsights').innerHTML = insightsHtml;
+    // Display key insights
+    if (data.llm_analysis.key_insights) {
+        const insightsHtml = data.llm_analysis.key_insights.map(insight => 
+            `<div class="insight-card"><i class="fas fa-star"></i> ${insight}</div>`
+        ).join('');
+        document.getElementById('keyInsights').innerHTML = insightsHtml;
+    }
 
-            // Create allocation chart
-            console.log('About to create chart with data:', data.llm_analysis.suggested_allocations);
-            createAllocationChart(data.llm_analysis.suggested_allocations);
+    // Create allocation chart
+    if (data.llm_analysis.suggested_allocations) {
+        createAllocationChart(data.llm_analysis.suggested_allocations);
+        displayAllocationDetails(data.llm_analysis.suggested_allocations);
+    }
 
-            // Display allocation details
-            displayAllocationDetails(data.llm_analysis.suggested_allocations);
+    // Display fund recommendations
+    displayFundRecommendations(data.recommendations.recommendations);
 
-            // Display fund recommendations
-            displayFundRecommendations(data.recommendations.recommendations);
+    // Display advanced analysis ONLY IF IT EXISTS
+    if (data.recommendations.advanced_analysis) {
+        displayAdvancedAnalysis(data.recommendations.advanced_analysis);
+    }
 
-            // Display advanced analysis
-            displayAdvancedAnalysis(data.recommendations.advanced_analysis);
-
-            if (data.recommendations.advanced_analysis) {
-            displayAdvancedAnalysis(data.recommendations.advanced_analysis);
-            }
+    // Display detailed analysis
+    if (data.llm_analysis.sections) {
+        displayDetailedAnalysis(data.llm_analysis.sections);
+    }
+} else {
+    // If the data is incomplete, show an error to avoid a blank page
+    alert('An error occurred while fetching recommendation data. Please try again.');
         }
+    }
 
         function createAllocationChart(allocations) {
             console.log('Creating allocation chart with data:', allocations);
