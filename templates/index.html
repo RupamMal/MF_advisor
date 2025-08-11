@@ -1298,59 +1298,79 @@
         });
 
         function displayResults(data) {
-            // Display user info
-            document.getElementById('userName').textContent = data.user_info.name;
-document.getElementById('userAge').textContent = data.user_info.age;
-document.getElementById('userIncome').textContent = data.user_info.annual_income.toLocaleString();
-document.getElementById('userInvestment').textContent = data.user_info.investment_amount.toLocaleString();
-document.getElementById('userRisk').textContent = data.user_info.risk_tolerance;
-document.getElementById('userHorizon').textContent = data.user_info.investment_horizon;
+            console.log("Received data from backend:", data); // For debugging
 
-// --- START OF FIX ---
-// First, check if the core data we need exists
-if (data.recommendations && data.llm_analysis) {
-    // Display risk profile
-    const riskProfile = document.getElementById('riskProfile');
-    // Check for risk_profile before using it
-    if (data.recommendations.risk_profile) {
-        riskProfile.textContent = `Risk Profile: ${data.recommendations.risk_profile.toUpperCase()}`;
-        riskProfile.className = `risk-profile risk-${data.recommendations.risk_profile}`;
-    }
+            // --- THE BULLETPROOF FIX ---
+            // STEP 1: Check for overall success and the existence of top-level objects.
+            // If this fails, we stop immediately and show an error.
+            if (!data || data.success !== true || !data.user_info || !data.recommendations || !data.llm_analysis) {
+                document.getElementById('resultsSection').innerHTML = `
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h5><i class="fas fa-exclamation-triangle"></i> An Error Occurred</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>We're sorry, but there was a problem generating your personalized recommendations. This could be due to a temporary issue with our analysis services.</p>
+                            <p><strong>Error received:</strong> ${data.error || 'Incomplete data returned from server.'}</p>
+                            <p>Please try again after a few moments.</p>
+                        </div>
+                    </div>
+                `;
+                // Make sure the results section is visible to show the error.
+                document.getElementById('resultsSection').style.display = 'block';
+                return; // IMPORTANT: Stop the function here.
+            }
 
-    // Display AI summary
-    document.getElementById('aiSummary').innerHTML = data.llm_analysis.summary;
+            // STEP 2: If we passed the check, we can safely render the data,
+            // but we will STILL use optional chaining (?.) as a second layer of safety.
 
-    // Display key insights
-    if (data.llm_analysis.key_insights) {
-        const insightsHtml = data.llm_analysis.key_insights.map(insight => 
-            `<div class="insight-card"><i class="fas fa-star"></i> ${insight}</div>`
-        ).join('');
-        document.getElementById('keyInsights').innerHTML = insightsHtml;
-    }
+            // Display user info (using ?? 'N/A' as a fallback for each item)
+            document.getElementById('userName').textContent = data.user_info.name ?? 'N/A';
+            document.getElementById('userAge').textContent = data.user_info.age ?? 'N/A';
+            document.getElementById('userIncome').textContent = data.user_info.annual_income?.toLocaleString() ?? 'N/A';
+            document.getElementById('userInvestment').textContent = data.user_info.investment_amount?.toLocaleString() ?? 'N/A';
+            document.getElementById('userRisk').textContent = data.user_info.risk_tolerance ?? 'N/A';
+            document.getElementById('userHorizon').textContent = data.user_info.investment_horizon ?? 'N/A';
 
-    // Create allocation chart
-    if (data.llm_analysis.suggested_allocations) {
-        createAllocationChart(data.llm_analysis.suggested_allocations);
-        displayAllocationDetails(data.llm_analysis.suggested_allocations);
-    }
+            // Display risk profile
+            const riskProfile = document.getElementById('riskProfile');
+            const riskValue = data.recommendations.risk_profile;
+            if (riskValue) {
+                riskProfile.textContent = `Risk Profile: ${riskValue.toUpperCase()}`;
+                riskProfile.className = `risk-profile risk-${riskValue}`;
+            }
 
-    // Display fund recommendations
-    displayFundRecommendations(data.recommendations.recommendations);
+            // Display AI summary and insights
+            document.getElementById('aiSummary').innerHTML = data.llm_analysis.summary ?? 'No summary available.';
+            
+            if (data.llm_analysis.key_insights && data.llm_analysis.key_insights.length > 0) {
+                const insightsHtml = data.llm_analysis.key_insights.map(insight => 
+                    `<div class="insight-card"><i class="fas fa-star"></i> ${insight}</div>`
+                ).join('');
+                document.getElementById('keyInsights').innerHTML = insightsHtml;
+            }
 
-    // Display advanced analysis ONLY IF IT EXISTS
-    if (data.recommendations.advanced_analysis) {
-        displayAdvancedAnalysis(data.recommendations.advanced_analysis);
-    }
+            // Create allocation chart (only if data exists)
+            if (data.llm_analysis.suggested_allocations && Object.keys(data.llm_analysis.suggested_allocations).length > 0) {
+                createAllocationChart(data.llm_analysis.suggested_allocations);
+                displayAllocationDetails(data.llm_analysis.suggested_allocations);
+            }
 
-    // Display detailed analysis
-    if (data.llm_analysis.sections) {
-        displayDetailedAnalysis(data.llm_analysis.sections);
-    }
-} else {
-    // If the data is incomplete, show an error to avoid a blank page
-    alert('An error occurred while fetching recommendation data. Please try again.');
+            // Display fund recommendations
+            if(data.recommendations.recommendations) {
+                displayFundRecommendations(data.recommendations.recommendations);
+            }
+
+            // Display advanced analysis (ONLY IF IT EXISTS)
+            if (data.recommendations.advanced_analysis) {
+                displayAdvancedAnalysis(data.recommendations.advanced_analysis);
+            }
+
+            // Display detailed analysis
+            if (data.llm_analysis.sections) {
+                displayDetailedAnalysis(data.llm_analysis.sections);
+            }
         }
-    }
 
         function createAllocationChart(allocations) {
             console.log('Creating allocation chart with data:', allocations);
