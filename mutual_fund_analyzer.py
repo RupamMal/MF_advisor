@@ -19,12 +19,30 @@ class MutualFundAnalyzer:
         safe_name = re.sub(r'\s+', '+', fund_name.strip())
         return f"https://www.google.com/search?q={safe_name}+mutual+fund"
 
+        def _safe_to_float(self, value, default=0.0):
+        """A helper function to safely convert any value to a float."""
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            return default
+
     def score_fund(self, row):
-        returns_score = row.get('sip_5yr_return', 0) * 0.4
-        risk_adjusted_score = row.get('sharpe_ratio', 0) * 10 * 0.25
-        expense_score = (2 - row.get('expense_ratio', 2)) * 0.15 # Lower expense ratio is better
-        alpha_score = row.get('alpha', 0) * 0.2
-    
+        """
+        This is the new, bulletproof scoring function. It uses the helper 
+        function to ensure all data is numeric before calculations, preventing crashes.
+        """
+        # Safely convert each value to a float before using it
+        sip_5yr_return = self._safe_to_float(row.get('sip_5yr_return'))
+        sharpe_ratio = self._safe_to_float(row.get('sharpe_ratio'))
+        expense_ratio = self._safe_to_float(row.get('expense_ratio'), 2.0) # Default to a high expense
+        alpha = self._safe_to_float(row.get('alpha'))
+
+        # Perform the calculations
+        returns_score = sip_5yr_return * 0.4
+        risk_adjusted_score = sharpe_ratio * 10 * 0.25
+        expense_score = (2 - expense_ratio) * 0.15 # Lower is better
+        alpha_score = alpha * 0.2
+        
         return returns_score + risk_adjusted_score + expense_score + alpha_score
 
 
