@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 import traceback
 
-# --- It's critical to import your other files AFTER the dotenv load ---
+# Load environment variables first
 load_dotenv()
 
 from mutual_fund_analyzer import MutualFundAnalyzer
@@ -12,21 +12,18 @@ from llm_recommender import LLMRecommender
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'a-strong-default-secret-key')
 
-# --- Startup Check ---
 print("--- Flask App Initializing ---")
 if not os.getenv('GEMINI_API_KEY'):
-    print("CRITICAL STARTUP WARNING: GEMINI_API_KEY IS NOT SET IN THIS ENVIRONMENT.")
+    print("CRITICAL STARTUP WARNING: GEMINI_API_KEY IS NOT SET.")
 else:
-    print("OK: GEMINI_API_KEY environment variable was found.")
-# ---
+    print("OK: GEMINI_API_KEY found.")
 
 try:
     analyzer = MutualFundAnalyzer()
     llm_recommender = LLMRecommender()
-    print("OK: Analyzer and LLMRecommender initialized successfully.")
+    print("OK: Analyzer and LLMRecommender initialized.")
 except Exception as e:
-    print(f"CRITICAL STARTUP ERROR: Failed to initialize components. Error: {e}")
-    traceback.print_exc()
+    print(f"CRITICAL STARTUP ERROR: {e}")
 
 @app.route('/')
 def index():
@@ -34,24 +31,31 @@ def index():
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    print("\n--- Received new request for /analyze ---")
+    print("\n--- Received /analyze request ---")
     try:
         data = request.get_json()
-        user_info = data # Use the whole data object
         
-        print("DEBUG: Step 1 - Calling MutualFundAnalyzer...")
+        # --- Updated to receive all fields from the full form ---
+        user_info = {
+            'name': data.get('name', 'User'),
+            'age': data.get('age', 30),
+            'annual_income': data.get('annual_income', 500000),
+            'investment_amount': data.get('investment_amount', 50000),
+            'risk_tolerance': data.get('risk_tolerance', 'moderate'),
+            'investment_goal': data.get('investment_goal', 'wealth_creation'),
+        }
+        print(f"DEBUG: Processing user_info: {user_info}")
+        
+        # --- Re-enabled the LIVE AI call ---
+        print("DEBUG: Getting basic recommendations...")
         recommendations = analyzer.get_recommendations(user_info)
-        print("DEBUG: Step 1 - MutualFundAnalyzer finished successfully.")
+        
+        print("DEBUG: Getting AI analysis...")
+        llm_analysis = llm_recommender.generate_recommendations(user_info, recommendations)
         
         for category, funds in recommendations.get('recommendations', {}).items():
             for fund in funds:
-                fund['grow_url'] = analyzer.get_grow_url(fund['name'])
-        
-        # --- DIAGNOSTIC STEP: THE REAL AI CALL IS DISABLED ---
-        # --- THIS IS THE FINAL, LIVE VERSION ---
-        print("DEBUG: Step 2 - Calling REAL LLMRecommender...")
-        llm_analysis = llm_recommender.generate_recommendations(user_info, recommendations)
-        print("DEBUG: Step 2 - LLMRecommender finished successfully.")
+                fund['grow_url'] = analyzer.get_grow_url(fund.get('name', ''))
         
         response_data = {
             'success': True,
@@ -65,9 +69,7 @@ def analyze():
         
     except Exception as e:
         error_traceback_string = traceback.format_exc()
-        print("--- A CRASH OCCURRED IN /analyze ---")
-        print(error_traceback_string)
-        print("------------------------------------")
+        print(f"--- CRASH IN /analyze ---\n{error_traceback_string}\n--------------------")
         return jsonify({
             'success': False,
             'error': 'A fatal server-side error occurred.',
@@ -76,17 +78,15 @@ def analyze():
 
 @app.route('/top-funds', methods=['POST'])
 def get_top_funds():
-    print("\n--- Received request for /top-funds ---")
+    print("\n--- Received /top-funds request ---")
     try:
         data = request.get_json()
         category = data.get('category', 'large_cap')
-        print(f"DEBUG: Category requested: {category}")
         top_funds = analyzer.get_top_funds(category)
-        print(f"DEBUG: Found {len(top_funds)} funds for category '{category}'.")
+        for fund in top_funds:
+            fund['grow_url'] = analyzer.get_grow_url(fund.get('name', ''))
         return jsonify({'success': True, 'funds': top_funds})
     except Exception as e:
         error_traceback_string = traceback.format_exc()
-        print("--- A CRASH OCCURRED IN /top-funds ---")
-        print(error_traceback_string)
-        print("--------------------------------------")
+        print(f"--- CRASH IN /top-funds ---\n{error_traceback_string}\n-----------------------")
         return jsonify({'success': False, 'error': str(e)}), 500
