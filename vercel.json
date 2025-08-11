@@ -1,18 +1,13 @@
 {
   "version": 2,
-  "builds": [
+  "builds": [  // <-- INSTRUCTION BLOCK 1
     {
       "src": "app.py",
       "use": "@vercel/python"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "app.py"
-    }
-  ],
-  "functions": {
+  "routes": [ /* ... */ ],
+  "functions": { // <-- INSTRUCTION BLOCK 2 (CONFLICTING)
     "app.py": {
       "maxDuration": 45
     }
