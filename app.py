@@ -60,18 +60,23 @@ def analyze():
             for fund in funds:
                 fund['grow_url'] = analyzer.get_grow_url(fund['name'])
         
-        print("DEBUG: Step 2 - Calling LLMRecommender...") # DEBUGGING
-        llm_analysis = llm_recommender.generate_recommendations(user_info, recommendations)
-        print("DEBUG: Step 2 - LLMRecommender finished successfully.") # DEBUGGING
+        # --- THIS IS THE NEW DIAGNOSTIC SECTION ---
+        print("DEBUG: Step 2 - Temporarily SKIPPING LLMRecommender...") # DEBUGGING
+        # llm_analysis = llm_recommender.generate_recommendations(user_info, recommendations) # The real call is commented out
         
-        print("DEBUG: Step 3 - Preparing final JSON response...") # DEBUGGING
-        response_data = {
-            'success': True,
-            'recommendations': recommendations,
-            'llm_analysis': llm_analysis,
-            'user_info': user_info
+        # We will use hardcoded "dummy" data instead.
+        llm_analysis = {
+            "summary": "This is a placeholder summary. The AI analysis is temporarily disabled for debugging.",
+            "key_insights": [
+                "This is a sample insight.",
+                "If you see this, the main application logic is working correctly."
+            ],
+            "suggested_allocations": recommendations.get("allocations", {}),
+            "sections": {
+                "investment_thesis": "This is a placeholder investment thesis."
+            }
         }
-        
+        print("DEBUG: Step 2 - Using dummy LLM data to prevent crash.") # DEBUGGING
         print("--- /analyze request completed successfully. Sending response. ---") # DEBUGGING
         return jsonify(response_data)
         
