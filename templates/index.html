@@ -7,78 +7,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .main-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            max-width: 1200px;
-        }
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 2rem;
-            border-radius: 20px 20px 0 0;
-            text-align: center;
-        }
-        .form-section, .top-funds-section, .results-section {
-            padding: 2rem;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            border: none;
-        }
-        .card {
-            border-radius: 15px;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1.5rem;
-        }
-        .card-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: 15px 15px 0 0 !important;
-        }
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-        }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--secondary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .risk-profile {
-            padding: 1rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            text-align: center;
-            font-weight: bold;
-        }
+        :root { --primary-color: #2c3e50; --secondary-color: #3498db; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .main-container { background: rgba(255, 255, 255, 0.95); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin: 20px auto; max-width: 1200px; }
+        .header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 2rem; border-radius: 20px 20px 0 0; text-align: center; }
+        .form-section, .top-funds-section, .results-section { padding: 2rem; }
+        .card { border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .card-header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border-radius: 15px 15px 0 0 !important; }
+        .loading { display: none; text-align: center; padding: 2rem; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--secondary-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .risk-profile { padding: 1rem; border-radius: 10px; text-align: center; font-weight: bold; }
         .risk-low { background: #d4edda; color: #155724; }
         .risk-moderate { background: #fff3cd; color: #856404; }
         .risk-high { background: #f8d7da; color: #721c24; }
         .fund-card { border-left: 4px solid var(--secondary-color); margin-bottom: 1rem; }
         .metric-badge { background: #ecf0f1; color: var(--primary-color); padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; margin: 2px; display: inline-block; }
         .insight-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px; padding: 1.5rem; margin: 1rem 0; }
-        .btn-success { background: linear-gradient(135deg, #28a745, #20c997); border: none; }
         pre { white-space: pre-wrap; background: #f8f9fa; border: 1px solid #dee2e6; padding: 1rem; border-radius: 5px; font-size: 0.8rem; color: #333; }
     </style>
 </head>
@@ -88,37 +33,35 @@
             <!-- Header -->
             <div class="header">
                 <h1><i class="fas fa-chart-line"></i> Your Mutual Fund Advisor</h1>
-                <p class="mb-0">This is only to educate you about Mutual Fund.</p>
-                <p class="mb-0 mt-2">Made with💝, by Rupam</p>
+                <p>Get personalized mutual fund recommendations based on your profile.</p>
+                 <p class="mb-0 mt-2">Made with💝, by Rupam</p>
             </div>
 
             <!-- Navigation -->
             <div class="nav-section p-4">
                 <div class="row">
-                    <div class="col-md-6 mb-2 mb-md-0">
-                        <button class="btn btn-outline-primary btn-lg w-100" id="personalizedBtn">
-                            <i class="fas fa-user-cog"></i> Get Personalized Recommendations
-                        </button>
-                    </div>
-                    <div class="col-md-6">
-                        <button class="btn btn-outline-success btn-lg w-100" id="topFundsBtn">
-                            <i class="fas fa-trophy"></i> View Top 5 Funds of the Month
-                        </button>
-                    </div>
+                    <div class="col-md-6 mb-2 mb-md-0"><button class="btn btn-outline-primary btn-lg w-100" id="personalizedBtn"><i class="fas fa-user-cog"></i> Get Personalized Recommendations</button></div>
+                    <div class="col-md-6"><button class="btn btn-outline-success btn-lg w-100" id="topFundsBtn"><i class="fas fa-trophy"></i> View Top 5 Funds</button></div>
                 </div>
             </div>
 
-            <!-- Input Form Section -->
+            <!-- Input Form Section (FULL VERSION) -->
             <div class="form-section" id="inputForm">
                 <form id="recommendationForm">
                     <div class="row">
                         <div class="col-md-6 mb-3"><label for="name" class="form-label">Full Name</label><input type="text" class="form-control" id="name" required></div>
                         <div class="col-md-6 mb-3"><label for="age" class="form-label">Age</label><input type="number" class="form-control" id="age" min="18" max="100" required></div>
-                        <div class="col-md-6 mb-3"><label for="investmentAmount" class="form-label">Total Investment Amount (₹)</label><input type="number" class="form-control" id="investmentAmount" min="1000" required></div>
-                        <div class="col-md-6 mb-3"><label for="riskTolerance" class="form-label">Risk Appetite</label><select class="form-select" id="riskTolerance"><option value="low">Conservative</option><option value="moderate" selected>Moderate</option><option value="high">Aggressive</option></select></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label for="annualIncome" class="form-label">Annual Income (₹)</label><input type="number" class="form-control" id="annualIncome" min="100000" required></div>
+                        <div class="col-md-6 mb-3"><label for="investmentAmount" class="form-label">Lumpsum Investment Amount (₹)</label><input type="number" class="form-control" id="investmentAmount" min="1000" value="50000" required></div>
+                    </div>
+                    <div class="row">
+                         <div class="col-md-6 mb-3"><label for="riskTolerance" class="form-label">Risk Appetite</label><select class="form-select" id="riskTolerance"><option value="low">Conservative (Low Risk)</option><option value="moderate" selected>Moderate</option><option value="high">Aggressive (High Risk)</option></select></div>
+                         <div class="col-md-6 mb-3"><label for="investmentGoal" class="form-label">Primary Investment Goal</label><select class="form-select" id="investmentGoal"><option value="retirement">Retirement</option><option value="child_education">Child's Education</option><option value="wealth_creation" selected>Wealth Creation</option><option value="tax_saving">Tax Saving (ELSS)</option></select></div>
                     </div>
                     <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-magic"></i> Get Recommendations</button>
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-magic"></i> Generate My Plan</button>
                     </div>
                 </form>
             </div>
@@ -126,13 +69,13 @@
             <!-- Loading Section -->
             <div class="loading" id="loading">
                 <div class="spinner mb-3"></div>
-                <h4>Analyzing your profile and generating recommendations...</h4>
+                <h4>Analyzing your profile and generating your personalized plan...</h4>
             </div>
             
             <!-- Top 5 Funds Section -->
             <div class="top-funds-section" id="topFundsSection" style="display: none;">
                 <div class="card">
-                    <div class="card-header"><h5><i class="fas fa-trophy"></i> Top 5 Mutual Funds of the Month</h5></div>
+                    <div class="card-header"><h5><i class="fas fa-trophy"></i> Top 5 Mutual Funds</h5></div>
                     <div class="card-body">
                         <div class="btn-group w-100 mb-3" role="group">
                             <input type="radio" class="btn-check" name="fundCategory" id="largeCap" value="large_cap" checked><label class="btn btn-outline-primary" for="largeCap">Large Cap</label>
@@ -146,17 +89,13 @@
             </div>
 
             <!-- Results Section -->
-            <div class="results-section" id="resultsSection" style="display: none;">
-                <!-- Content will be generated by JavaScript -->
-            </div>
+            <div class="results-section" id="resultsSection" style="display: none;"></div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        let allocationChart = null;
-
         // --- Navigation Logic ---
         const inputForm = document.getElementById('inputForm');
         const topFundsSection = document.getElementById('topFundsSection');
@@ -173,7 +112,7 @@
             inputForm.style.display = 'none';
             topFundsSection.style.display = 'block';
             resultsSection.style.display = 'none';
-            loadTopFunds('large_cap'); // Load default category
+            loadTopFunds('large_cap');
         });
 
         // --- Top Funds Logic ---
@@ -183,58 +122,57 @@
 
         async function loadTopFunds(category) {
             const contentDiv = document.getElementById('topFundsContent');
-            contentDiv.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
-            
+            contentDiv.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
             try {
                 const response = await fetch('/top-funds', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ category: category })
+                    body: JSON.stringify({ category })
                 });
                 const data = await response.json();
-
                 if (data.success) {
-                    displayTopFunds(data.funds, category);
+                    displayTopFunds(data.funds);
                 } else {
-                    contentDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${data.error}<br><pre>${data.debug_traceback || ''}</pre></div>`;
+                    contentDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${data.error}</div>`;
                 }
             } catch (error) {
-                contentDiv.innerHTML = `<div class="alert alert-danger">A network error occurred: ${error.message}</div>`;
+                contentDiv.innerHTML = `<div class="alert alert-danger">Network error: ${error.message}</div>`;
             }
         }
 
-        function displayTopFunds(funds, category) {
+        function displayTopFunds(funds) {
             const container = document.getElementById('topFundsContent');
             if (!funds || funds.length === 0) {
-                container.innerHTML = '<p>No funds found for this category.</p>';
+                container.innerHTML = '<p class="text-center">No funds found for this category.</p>';
                 return;
             }
-            let html = funds.map((fund, index) => `
+            container.innerHTML = funds.map((fund, index) => `
                 <div class="fund-card p-3 mb-2">
-                    <h6><span class="badge bg-primary me-2">#${index + 1}</span>${fund.name}</h6>
+                    <h6><span class="badge bg-primary me-2">#${index + 1}</span>${fund.name || 'N/A'}</h6>
                     <div>
-                        <span class="metric-badge">5Y Return: ${fund.sip_5yr_return?.toFixed(2) || 'N/A'}%</span>
-                        <span class="metric-badge">Expense: ${fund.expense_ratio?.toFixed(2) || 'N/A'}%</span>
+                        <span class="metric-badge">5Y Return: ${fund.sip_5yr_return?.toFixed(2) ?? 'N/A'}%</span>
+                        <span class="metric-badge">Expense: ${fund.expense_ratio?.toFixed(2) ?? 'N/A'}%</span>
+                        <span class="metric-badge">Score: ${fund.score?.toFixed(2) ?? 'N/A'}</span>
                         <a href="${fund.grow_url || '#'}" target="_blank" class="btn btn-sm btn-success float-end">View</a>
                     </div>
-                </div>
-            `).join('');
-            container.innerHTML = html;
+                </div>`).join('');
         }
 
-        // --- Main Form Submission Logic ---
+        // --- Main Form Submission ---
         document.getElementById('recommendationForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             inputForm.style.display = 'none';
             loadingSection.style.display = 'block';
             resultsSection.style.display = 'none';
 
+            // Collect all data from the full form
             const formData = {
                 name: document.getElementById('name').value,
                 age: document.getElementById('age').value,
+                annual_income: document.getElementById('annualIncome').value,
                 investment_amount: document.getElementById('investmentAmount').value,
                 risk_tolerance: document.getElementById('riskTolerance').value,
-                // Add other form fields here if you expand the form later
+                investment_goal: document.getElementById('investmentGoal').value,
             };
 
             try {
@@ -253,94 +191,69 @@
             }
         });
 
-        // --- Results Display Logic (FAILSAFE VERSION) ---
+        // --- Bulletproof Results Display Function ---
         function displayResults(data) {
-            console.log("Received data from backend:", data); // For debugging
             const container = document.getElementById('resultsSection');
 
-            // This is the failsafe block. It checks for any error and displays it.
+            // Failsafe: If backend reports an error, display it and stop.
             if (data.success !== true) {
-                let errorMessage = `<p><strong>Error:</strong> ${data.error || 'An unknown error occurred on the server.'}</p>`;
-                
-                // If the backend sent detailed debug info, show it!
+                let errorMessage = `<p><strong>Error:</strong> ${data.error || 'An unknown error occurred.'}</p>`;
                 if (data.debug_traceback) {
-                    errorMessage += `
-                        <h6>Technical Details (Traceback):</h6>
-                        <pre>${data.debug_traceback}</pre>
-                    `;
+                    errorMessage += `<h6>Technical Details:</h6><pre>${data.debug_traceback}</pre>`;
                 }
-
-                container.innerHTML = `
-                    <div class="card">
-                        <div class="card-header bg-danger text-white">
-                            <h5><i class="fas fa-exclamation-triangle"></i> Application Error</h5>
-                        </div>
-                        <div class="card-body">${errorMessage}</div>
-                    </div>`;
-                return; // Stop the function here.
+                container.innerHTML = `<div class="card"><div class="card-header bg-danger text-white"><h5>Application Error</h5></div><div class="card-body">${errorMessage}</div></div>`;
+                return;
             }
-
-            // If we get here, success is true and we can safely render the page.
-            // We still use optional chaining (?.) as a best practice.
-            const userInfo = data.user_info || {};
-            const recommendations = data.recommendations || {};
-            const llmAnalysis = data.llm_analysis || {};
+            
+            // If successful, safely render the data.
+            const { user_info = {}, recommendations = {}, llm_analysis = {} } = data;
             const riskValue = recommendations.risk_profile;
 
             let html = `
-                <!-- User Summary -->
                 <div class="card">
-                    <div class="card-header"><h5><i class="fas fa-user"></i> Your Investment Profile</h5></div>
+                    <div class="card-header"><h5><i class="fas fa-user"></i> Your Profile</h5></div>
                     <div class="card-body">
-                        <p><strong>Name:</strong> ${userInfo.name || 'N/A'}</p>
-                        <p><strong>Investment:</strong> ₹${userInfo.investment_amount?.toLocaleString() || 'N/A'}</p>
+                        <p><strong>Name:</strong> ${user_info.name || 'N/A'}</p>
+                        <p><strong>Investment:</strong> ₹${user_info.investment_amount?.toLocaleString() || 'N/A'}</p>
                         ${riskValue ? `<div class="risk-profile risk-${riskValue}">${riskValue.toUpperCase()} RISK</div>` : ''}
                     </div>
                 </div>
-
-                <!-- AI Analysis Summary -->
                 <div class="card">
-                    <div class="card-header"><h5><i class="fas fa-brain"></i> AI Analysis Summary</h5></div>
-                    <div class="card-body">${llmAnalysis.summary || 'No summary available.'}</div>
-                </div>
-            `;
-            
-            // Key Insights
-            if (llmAnalysis.key_insights && llmAnalysis.key_insights.length > 0) {
+                    <div class="card-header"><h5><i class="fas fa-brain"></i> AI Summary</h5></div>
+                    <div class="card-body">${llm_analysis.summary || '<p>AI summary could not be generated.</p>'}</div>
+                </div>`;
+
+            if (llm_analysis.key_insights && llm_analysis.key_insights.length > 0) {
                 html += `
                 <div class="card">
                     <div class="card-header"><h5><i class="fas fa-lightbulb"></i> Key Insights</h5></div>
                     <div class="card-body">
-                        ${llmAnalysis.key_insights.map(insight => `<div class="insight-card p-3 mb-2">${insight}</div>`).join('')}
+                        ${llm_analysis.key_insights.map(insight => `<div class="insight-card p-3 mb-2">${insight}</div>`).join('')}
                     </div>
                 </div>`;
             }
 
-            // Fund Recommendations
             if (recommendations.recommendations) {
                 html += `
                 <div class="card">
                     <div class="card-header"><h5><i class="fas fa-stream"></i> Recommended Funds</h5></div>
                     <div class="card-body">`;
-                
                 for (const [category, funds] of Object.entries(recommendations.recommendations)) {
-                    html += `<h6>${category.replace('_', ' ').toUpperCase()}</h6>`;
                     if (funds && funds.length > 0) {
+                        html += `<h6>${category.replace(/_/g, ' ').toUpperCase()}</h6>`;
                         html += funds.map(fund => `
                             <div class="fund-card p-3 mb-2">
                                 <strong>${fund.name || 'Unnamed Fund'}</strong>
                                 <div>
-                                    <span class="metric-badge">5Y: ${fund.sip_5yr_return?.toFixed(2) || 'N/A'}%</span>
-                                    <span class="metric-badge">Exp: ${fund.expense_ratio?.toFixed(2) || 'N/A'}%</span>
+                                    <span class="metric-badge">5Y Return: ${fund.sip_5yr_return?.toFixed(2) ?? 'N/A'}%</span>
+                                    <span class="metric-badge">Expense: ${fund.expense_ratio?.toFixed(2) ?? 'N/A'}%</span>
                                     <a href="${fund.grow_url || '#'}" target="_blank" class="btn btn-sm btn-success float-end">View</a>
                                 </div>
-                            </div>
-                        `).join('');
+                            </div>`).join('');
                     }
                 }
                 html += `</div></div>`;
             }
-
             container.innerHTML = html;
         }
     </script>
