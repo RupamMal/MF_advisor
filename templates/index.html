@@ -34,7 +34,7 @@
             <div class="header">
                 <h1><i class="fas fa-chart-line"></i> Your Mutual Fund Advisor</h1>
                 <p>Get personalized mutual fund recommendations based on your complete profile.</p>
-                <p class="mb-0 mt-2">Made with💝, by Rupam</p>
+                 <p class="mb-0 mt-2">Made with💝, by Rupam</p>
             </div>
 
             <!-- Navigation -->
@@ -49,24 +49,24 @@
             <div class="form-section" id="inputForm">
                 <form id="recommendationForm">
                      <div class="row">
-                        <div class="col-md-6 mb-3"><label for="name" class="form-label">Full Name</label><input type="text" class="form-control" id="name" required></div>
-                        <div class="col-md-6 mb-3"><label for="age" class="form-label">Age</label><input type="number" class="form-control" id="age" min="18" max="100" required></div>
+                        <div class="col-md-6 mb-3"><label for="name" class="form-label">Full Name</label><input type="text" class="form-control" id="name" value="Rupam" required></div>
+                        <div class="col-md-6 mb-3"><label for="age" class="form-label">Age</label><input type="number" class="form-control" id="age" min="18" max="100" value="25" required></div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3"><label for="annualIncome" class="form-label">Annual Income (₹)</label><input type="number" class="form-control" id="annualIncome" min="100000" required></div>
-                        <div class="col-md-6 mb-3"><label for="investmentAmount" class="form-label">Total Lumpsum Investment (₹)</label><input type="number" class="form-control" id="investmentAmount" min="1000" required></div>
+                        <div class="col-md-6 mb-3"><label for="annualIncome" class="form-label">Annual Income (₹)</label><input type="number" class="form-control" id="annualIncome" min="100000" value="1200000" required></div>
+                        <div class="col-md-6 mb-3"><label for="investmentAmount" class="form-label">Lumpsum Investment Amount (₹)</label><input type="number" class="form-control" id="investmentAmount" min="1000" value="100000" required></div>
                     </div>
-                    <div class="row">
+                     <div class="row">
                          <div class="col-md-6 mb-3"><label for="riskTolerance" class="form-label">Risk Appetite</label><select class="form-select" id="riskTolerance"><option value="low">Conservative</option><option value="moderate" selected>Moderate</option><option value="high">Aggressive</option></select></div>
-                         <div class="col-md-6 mb-3"><label for="investmentGoal" class="form-label">Investment Goal</label><select class="form-select" id="investmentGoal"><option value="retirement">Retirement Planning</option><option value="child_education">Child Education</option><option value="wealth_creation" selected>Wealth Creation</option><option value="tax_saving">Tax Saving</option></select></div>
+                         <div class="col-md-6 mb-3"><label for="investmentGoal" class="form-label">Primary Investment Goal</label><select class="form-select" id="investmentGoal"><option value="retirement">Retirement</option><option value="child_education">Child's Education</option><option value="wealth_creation" selected>Wealth Creation</option><option value="tax_saving">Tax Saving (ELSS)</option></select></div>
                     </div>
                      <div class="row">
                          <div class="col-md-6 mb-3"><label for="investmentHorizon" class="form-label">Investment Horizon (Years)</label><select class="form-select" id="investmentHorizon"><option value="1-3">1-3 years</option><option value="3-5">3-5 years</option><option value="5-10" selected>5-10 years</option><option value="10+">10+ years</option></select></div>
-                         <div class="col-md-6 mb-3"><label for="monthlySIP" class="form-label">Monthly SIP Budget (₹)</label><input type="number" class="form-control" id="monthlySIP" min="500" placeholder="e.g., 5000"></div>
+                         <div class="col-md-6 mb-3"><label for="monthlySIP" class="form-label">Monthly SIP Budget (₹)</label><input type="number" class="form-control" id="monthlySIP" value="10000" min="500" placeholder="e.g., 5000"></div>
                      </div>
                      <div class="row">
-                         <div class="col-md-6 mb-3"><label for="existingInvestments" class="form-label">Existing Investments (₹)</label><input type="number" class="form-control" id="existingInvestments" value="0" min="0"></div>
-                         <div class="col-md-6 mb-3"><label for="taxBracket" class="form-label">Tax Bracket</label><select class="form-select" id="taxBracket"><option value="0">0%</option><option value="10">10%</option><option value="20">20%</option><option value="30" selected>30%</option></select></div>
+                         <div class="col-md-6 mb-3"><label for="existingInvestments" class="form-label">Existing Investments (₹)</label><input type="number" class="form-control" id="existingInvestments" value="200000" min="0"></div>
+                         <div class="col-md-6 mb-3"><label for="taxBracket" class="form-label">Tax Bracket</label><select class="form-select" id="taxBracket"><option value="0">0%</option><option value="10">10%</option><option value="20" selected>20%</option><option value="30">30%</option></select></div>
                      </div>
                      <div class="row">
                          <div class="col-md-6 mb-3"><label for="emergencyFund" class="form-label">Emergency Fund Status</label><select class="form-select" id="emergencyFund"><option value="yes" selected>Fully funded</option><option value="no">Need to build</option><option value="partial">Partially funded</option></select></div>
@@ -172,7 +172,7 @@
             const { user_info = {}, recommendations = {}, llm_analysis = {} } = data;
             const riskValue = recommendations.risk_profile;
             let html = `
-                <div class="card"><div class="card-header"><h5><i class="fas fa-user"></i> Profile</h5></div><div class="card-body">
+                <div class="card"><div class="card-header"><h5><i class="fas fa-user"></i> Your Profile</h5></div><div class="card-body">
                 <p><strong>Name:</strong> ${user_info.name||'N/A'}</p>
                 <p><strong>Investment:</strong> ₹${user_info.investment_amount?.toLocaleString()||'N/A'}</p>
                 ${riskValue ? `<div class="risk-profile risk-${riskValue}">${riskValue.toUpperCase()} RISK</div>` : ''}</div></div>
@@ -182,7 +182,7 @@
                 ${llm_analysis.key_insights.map(insight => `<div class="insight-card p-3 mb-2">${insight}</div>`).join('')}</div></div>`;
             }
             if (recommendations.recommendations) {
-                html += `<div class="card"><div class="card-header"><h5><i class="fas fa-stream"></i> Funds</h5></div><div class="card-body">`;
+                html += `<div class="card"><div class="card-header"><h5><i class="fas fa-stream"></i> Recommended Funds</h5></div><div class="card-body">`;
                 for (const [category, funds] of Object.entries(recommendations.recommendations)) {
                     if (funds && funds.length > 0) {
                         html += `<h6>${category.replace(/_/g, ' ').toUpperCase()}</h6>`;
