@@ -7,24 +7,566 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --primary-color: #2c3e50; --secondary-color: #3498db; }
-        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .main-container { background: rgba(255, 255, 255, 0.95); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin: 20px auto; max-width: 1200px; }
-        .header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 2rem; border-radius: 20px 20px 0 0; text-align: center; }
-        .form-section, .top-funds-section, .results-section { padding: 2rem; }
-        .card { border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
-        .card-header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border-radius: 15px 15px 0 0 !important; }
-        .loading { display: none; text-align: center; padding: 2rem; }
-        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--secondary-color); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .risk-profile { padding: 1rem; border-radius: 10px; text-align: center; font-weight: bold; }
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-bg: #ecf0f1;
+            --dark-bg: #34495e;
+        }
+
+        /* PDF-specific styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #resultsSection, #resultsSection * {
+                visibility: visible;
+            }
+            #resultsSection {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+        }
+
+        .form-section {
+            padding: 2rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .results-section {
+            padding: 2rem;
+            display: none;
+        }
+
+        .card {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1rem 1.5rem;
+        }
+
+        .fund-card {
+            border-left: 4px solid var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .metric-badge {
+            background: var(--light-bg);
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 2px;
+            display: inline-block;
+        }
+
+        .allocation-chart {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .risk-profile {
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
         .risk-low { background: #d4edda; color: #155724; }
         .risk-moderate { background: #fff3cd; color: #856404; }
         .risk-high { background: #f8d7da; color: #721c24; }
-        .fund-card { border-left: 4px solid var(--secondary-color); margin-bottom: 1rem; }
-        .metric-badge { background: #ecf0f1; color: var(--primary-color); padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; margin: 2px; display: inline-block; }
-        .insight-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px; padding: 1.5rem; margin: 1rem 0; }
-        pre { white-space: pre-wrap; background: #f8f9fa; border: 1px solid #dee2e6; padding: 1rem; border-radius: 5px; font-size: 0.8rem; color: #333; }
+
+        .insight-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .fund-manager {
+            background: var(--light-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+            background: linear-gradient(135deg, #20c997, #28a745);
+        }
+
+        /* Tooltip styles */
+        .tooltip-trigger {
+            cursor: help;
+            color: var(--secondary-color);
+            text-decoration: underline dotted;
+        }
+
+        .risk-warning {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #c44569;
+        }
+
+        .projection-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .diversification-score {
+            background: var(--light-bg);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .peer-comparison {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .volatility-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .volatility-low { background: #d4edda; color: #155724; }
+        .volatility-moderate { background: #fff3cd; color: #856404; }
+        .volatility-high { background: #f8d7da; color: #721c24; }
+
+        .expense-impact {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #2196f3;
+        }
+
+        /* Navigation Section */
+        .nav-section {
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .nav-section .btn {
+            border-radius: 15px;
+            padding: 15px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-width: 2px;
+        }
+
+        .nav-section .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Top Funds Section */
+        .top-funds-section {
+            padding: 2rem;
+        }
+
+        .btn-group .btn {
+            border-radius: 10px;
+            margin: 0 2px;
+            font-weight: 600;
+        }
+
+        .btn-check:checked + .btn {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border-color: var(--secondary-color);
+            color: white;
+        }
+
+        /* Enhanced Card Styles */
+        .card {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 1.5rem 2rem;
+            border: none;
+        }
+
+        /* Enhanced Form Styles */
+        .form-control, .form-select {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.3rem rgba(52, 152, 219, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Enhanced Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            border-radius: 15px;
+            padding: 15px 35px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        /* Enhanced Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            position: relative;
+            z-index: 1;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            position: relative;
+            z-index: 1;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Enhanced Background */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Apply animations */
+        .main-container {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .card {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .btn-primary:hover {
+            animation: pulse 0.3s ease-in-out;
+        }
+
+        /* Enhanced metric badges */
+        .metric-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            margin: 3px;
+            display: inline-block;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .metric-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Enhanced fund cards */
+        .fund-card {
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .fund-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+        }
+
+        /* Enhanced loading animation */
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        /* Enhanced risk profile */
+        .risk-profile {
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Enhanced insight cards */
+        .insight-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .insight-card i {
+            position: relative;
+            z-index: 1;
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        /* Enhanced form section */
+        .form-section {
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Enhanced navigation buttons */
+        .nav-section .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-section .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-section .btn:hover::before {
+            left: 100%;
+        }
     </style>
 </head>
 <body>
@@ -33,169 +575,1091 @@
             <!-- Header -->
             <div class="header">
                 <h1><i class="fas fa-chart-line"></i> Your Mutual Fund Advisor</h1>
-                <p>Get personalized mutual fund recommendations based on your complete profile.</p>
-                 <p class="mb-0 mt-2">Made with💝, by Rupam</p>
+                <p class="mb-0">This is only to educate you about Mutual Fund.</p>
+                <p class="mb-0 mt-2">Get personalized mutual fund recommendations</p>
+                <p class="mb-0 mt-2">Made with💝, by Rupam</p>
             </div>
 
             <!-- Navigation -->
-            <div class="nav-section p-4">
+            <div class="nav-section">
                 <div class="row">
-                    <div class="col-md-6 mb-2 mb-md-0"><button class="btn btn-outline-primary btn-lg w-100" id="personalizedBtn"><i class="fas fa-user-cog"></i> Get Personalized Recommendations</button></div>
-                    <div class="col-md-6"><button class="btn btn-outline-success btn-lg w-100" id="topFundsBtn"><i class="fas fa-trophy"></i> View Top 5 Funds</button></div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-primary btn-lg w-100" id="personalizedBtn">
+                            <i class="fas fa-user-cog"></i> Get Personalized Recommendations
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-success btn-lg w-100" id="topFundsBtn">
+                            <i class="fas fa-trophy"></i> View Top 5 Funds of the Month
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Input Form Section (FULL DETAILED VERSION) -->
+            <!-- Input Form -->
             <div class="form-section" id="inputForm">
                 <form id="recommendationForm">
-                     <div class="row">
-                        <div class="col-md-6 mb-3"><label for="name" class="form-label">Full Name</label><input type="text" class="form-control" id="name" value="Rupam" required></div>
-                        <div class="col-md-6 mb-3"><label for="age" class="form-label">Age</label><input type="number" class="form-control" id="age" min="18" max="100" value="25" required></div>
-                    </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3"><label for="annualIncome" class="form-label">Annual Income (₹)</label><input type="number" class="form-control" id="annualIncome" min="100000" value="1200000" required></div>
-                        <div class="col-md-6 mb-3"><label for="investmentAmount" class="form-label">Lumpsum Investment Amount (₹)</label><input type="number" class="form-control" id="investmentAmount" min="1000" value="100000" required></div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="age" class="form-label">Age</label>
+                                <input type="number" class="form-control" id="age" min="18" max="100" required>
+                            </div>
+                        </div>
                     </div>
-                     <div class="row">
-                         <div class="col-md-6 mb-3"><label for="riskTolerance" class="form-label">Risk Appetite</label><select class="form-select" id="riskTolerance"><option value="low">Conservative</option><option value="moderate" selected>Moderate</option><option value="high">Aggressive</option></select></div>
-                         <div class="col-md-6 mb-3"><label for="investmentGoal" class="form-label">Primary Investment Goal</label><select class="form-select" id="investmentGoal"><option value="retirement">Retirement</option><option value="child_education">Child's Education</option><option value="wealth_creation" selected>Wealth Creation</option><option value="tax_saving">Tax Saving (ELSS)</option></select></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="annualIncome" class="form-label">Annual Income (₹)</label>
+                                <input type="number" class="form-control" id="annualIncome" min="100000" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="investmentAmount" class="form-label">Investment Amount (₹)</label>
+                                <input type="number" class="form-control" id="investmentAmount" min="1000" required>
+                            </div>
+                        </div>
                     </div>
-                     <div class="row">
-                         <div class="col-md-6 mb-3"><label for="investmentHorizon" class="form-label">Investment Horizon (Years)</label><select class="form-select" id="investmentHorizon"><option value="1-3">1-3 years</option><option value="3-5">3-5 years</option><option value="5-10" selected>5-10 years</option><option value="10+">10+ years</option></select></div>
-                         <div class="col-md-6 mb-3"><label for="monthlySIP" class="form-label">Monthly SIP Budget (₹)</label><input type="number" class="form-control" id="monthlySIP" value="10000" min="500" placeholder="e.g., 5000"></div>
+
+                                         <div class="row">
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="riskTolerance" class="form-label">Risk Appetite</label>
+                                 <select class="form-select" id="riskTolerance">
+                                     <option value="low">Conservative (Low Risk)</option>
+                                     <option value="moderate" selected>Moderate</option>
+                                     <option value="high">Aggressive (High Risk)</option>
+                                 </select>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="investmentGoal" class="form-label">Investment Goal</label>
+                                 <select class="form-select" id="investmentGoal">
+                                     <option value="retirement">Retirement Planning</option>
+                                     <option value="child_education">Child Education</option>
+                                     <option value="wealth_creation" selected>Wealth Creation</option>
+                                     <option value="short_term">Short-term Savings</option>
+                                     <option value="tax_saving">Tax Saving</option>
+                                     <option value="emergency_fund">Emergency Fund</option>
+                                 </select>
+                             </div>
+                         </div>
                      </div>
+
                      <div class="row">
-                         <div class="col-md-6 mb-3"><label for="existingInvestments" class="form-label">Existing Investments (₹)</label><input type="number" class="form-control" id="existingInvestments" value="200000" min="0"></div>
-                         <div class="col-md-6 mb-3"><label for="taxBracket" class="form-label">Tax Bracket</label><select class="form-select" id="taxBracket"><option value="0">0%</option><option value="10">10%</option><option value="20" selected>20%</option><option value="30">30%</option></select></div>
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="investmentHorizon" class="form-label">Investment Horizon (Years)</label>
+                                 <select class="form-select" id="investmentHorizon">
+                                     <option value="1-3">1-3 years</option>
+                                     <option value="3-5">3-5 years</option>
+                                     <option value="5-10" selected>5-10 years</option>
+                                     <option value="10-15">10-15 years</option>
+                                     <option value="15+">15+ years</option>
+                                 </select>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="monthlySIP" class="form-label">Monthly SIP Budget (₹)</label>
+                                 <input type="number" class="form-control" id="monthlySIP" min="500" placeholder="e.g., 5000">
+                             </div>
+                         </div>
                      </div>
+
                      <div class="row">
-                         <div class="col-md-6 mb-3"><label for="emergencyFund" class="form-label">Emergency Fund Status</label><select class="form-select" id="emergencyFund"><option value="yes" selected>Fully funded</option><option value="no">Need to build</option><option value="partial">Partially funded</option></select></div>
-                         <div class="col-md-6 mb-3"><label for="fundTypePreference" class="form-label">Fund Plan Preference</label><select class="form-select" id="fundTypePreference"><option value="direct" selected>Direct Plan</option><option value="regular">Regular Plan</option></select></div>
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="lumpsumInvestment" class="form-label">Lumpsum Investment (₹)</label>
+                                 <input type="number" class="form-control" id="lumpsumInvestment" min="0" placeholder="e.g., 50000">
+                                 <small class="form-text text-muted">One-time investment amount (optional if SIP is provided)</small>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="sipInvestment" class="form-label">Monthly SIP Investment (₹)</label>
+                                 <input type="number" class="form-control" id="sipInvestment" min="0" placeholder="e.g., 5000">
+                                 <small class="form-text text-muted">Monthly systematic investment (optional if lumpsum is provided)</small>
+                             </div>
+                         </div>
                      </div>
+
                      <div class="row">
-                         <div class="col-md-6 mb-3"><label for="esgPreference" class="form-label">ESG Preference</label><select class="form-select" id="esgPreference"><option value="no_preference" selected>No preference</option><option value="esg_focused">ESG-focused</option></select></div>
-                         <div class="col-md-6 mb-3"><label for="dividendPreference" class="form-label">Dividend vs Growth</label><select class="form-select" id="dividendPreference"><option value="growth" selected>Growth</option><option value="dividend">Dividend</option></select></div>
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="existingInvestments" class="form-label">Existing Investments (₹)</label>
+                                 <input type="number" class="form-control" id="existingInvestments" min="0" placeholder="e.g., 100000">
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="taxBracket" class="form-label">Tax Bracket</label>
+                                 <select class="form-select" id="taxBracket">
+                                     <option value="0">0% (Up to ₹4L)</option>
+                                     <option value="5">5% (₹4L - ₹8L)</option>
+                                     <option value="10">10% (₹8L - ₹12L)</option>
+                                     <option value="15">15% (₹12L - ₹16L)</option>
+                                     <option value="20">20% (₹16L - ₹20L)</option>
+                                     <option value="25">25% (₹20L - ₹24L)</option>
+                                     <option value="30" selected>30% (Above ₹24L)</option>
+                                 </select>
+                             </div>
+                         </div>
                      </div>
-                    <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-magic"></i> Get Recommendations</button>
+
+                     <div class="row">
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="emergencyFund" class="form-label">Emergency Fund Available</label>
+                                 <select class="form-select" id="emergencyFund">
+                                     <option value="yes" selected>Yes, I have emergency fund</option>
+                                     <option value="no">No, I need to build one</option>
+                                     <option value="partial">Partially covered</option>
+                                 </select>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="fundTypePreference" class="form-label">Fund Type Preference</label>
+                                 <select class="form-select" id="fundTypePreference">
+                                     <option value="direct" selected>Direct Plan (Lower expense)</option>
+                                     <option value="regular">Regular Plan (Advisor support)</option>
+                                 </select>
+                             </div>
+                         </div>
+                     </div>
+
+                     <div class="row">
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="esgPreference" class="form-label">ESG Preference</label>
+                                 <select class="form-select" id="esgPreference">
+                                     <option value="no_preference" selected>No specific preference</option>
+                                     <option value="esg_focused">ESG-focused funds</option>
+                                     <option value="esg_aware">ESG-aware funds</option>
+                                 </select>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="mb-3">
+                                 <label for="dividendPreference" class="form-label">Dividend vs Growth</label>
+                                 <select class="form-select" id="dividendPreference">
+                                     <option value="growth" selected>Growth Option</option>
+                                     <option value="dividend">Dividend Option</option>
+                                     <option value="both">Both (for diversification)</option>
+                                 </select>
+                             </div>
+                         </div>
+                     </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-magic"></i> Get Recommendations
+                        </button>
                     </div>
                 </form>
             </div>
 
-            <!-- All other sections (Loading, Top Funds, Results) remain the same -->
-            <div class="loading" id="loading"><div class="spinner mb-3"></div><h4>Analyzing your profile...</h4></div>
-            <div class="top-funds-section" id="topFundsSection" style="display: none;"><div class="card"><div class="card-header"><h5><i class="fas fa-trophy"></i> Top 5 Mutual Funds</h5></div><div class="card-body"><div class="btn-group w-100 mb-3" role="group"><input type="radio" class="btn-check" name="fundCategory" id="largeCap" value="large_cap" checked><label class="btn btn-outline-primary" for="largeCap">Large</label><input type="radio" class="btn-check" name="fundCategory" id="midCap" value="mid_cap"><label class="btn btn-outline-primary" for="midCap">Mid</label><input type="radio" class="btn-check" name="fundCategory" id="flexiCap" value="flexi_cap"><label class="btn btn-outline-primary" for="flexiCap">Flexi</label><input type="radio" class="btn-check" name="fundCategory" id="smallCap" value="small_cap"><label class="btn btn-outline-primary" for="smallCap">Small</label></div><div id="topFundsContent"></div></div></div></div>
-            <div class="results-section" id="resultsSection" style="display: none;"></div>
+            <!-- Loading Section -->
+            <div class="loading" id="loading">
+                <div class="spinner mb-3"></div>
+                <h4>Analyzing your profile and generating recommendations...</h4>
+                <p>This may take a few moments as we are analyzing thousands of mutual funds.</p>
+            </div>
+
+            <!-- Top 5 Funds Section -->
+            <div class="top-funds-section" id="topFundsSection" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-trophy"></i> Top 5 Mutual Funds of the Month</h5>
+                        <p class="mb-0">Based on AUM, Expense Ratio, Returns, Alpha, Beta, Sharpe & Sortino Ratios</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="fundCategory" id="largeCap" value="large_cap" checked>
+                                    <label class="btn btn-outline-primary" for="largeCap">Large Cap</label>
+                                    
+                                    <input type="radio" class="btn-check" name="fundCategory" id="midCap" value="mid_cap">
+                                    <label class="btn btn-outline-primary" for="midCap">Mid Cap</label>
+                                    
+                                    <input type="radio" class="btn-check" name="fundCategory" id="flexiCap" value="flexi_cap">
+                                    <label class="btn btn-outline-primary" for="flexiCap">Flexi Cap</label>
+                                    
+                                    <input type="radio" class="btn-check" name="fundCategory" id="smallCap" value="small_cap">
+                                    <label class="btn btn-outline-primary" for="smallCap">Small Cap</label>
+                                    
+                                    <input type="radio" class="btn-check" name="fundCategory" id="multiCap" value="multi_cap">
+                                    <label class="btn btn-outline-primary" for="multiCap">Multi Cap</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="topFundsContent">
+                            <!-- Top funds will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <!-- User Summary -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-user"></i> Your Investment Profile</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Name:</strong> <span id="userName"></span></p>
+                                <p><strong>Age:</strong> <span id="userAge"></span> years</p>
+                                <p><strong>Annual Income:</strong> ₹<span id="userIncome"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Investment Amount:</strong> ₹<span id="userInvestment"></span></p>
+                                <p><strong>Risk Tolerance:</strong> <span id="userRisk"></span></p>
+                                <p><strong>Investment Horizon:</strong> <span id="userHorizon"></span></p>
+                            </div>
+                        </div>
+                        <div class="risk-profile" id="riskProfile"></div>
+                    </div>
+                </div>
+
+                <!-- AI Analysis Summary -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-brain"></i> AI Analysis Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="aiSummary"></div>
+                    </div>
+                </div>
+
+                <!-- Key Insights -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-lightbulb"></i> Key Insights</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="keyInsights"></div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Allocation -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-pie-chart"></i> Recommended Portfolio Allocation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="allocation-chart" style="max-width: 300px; margin: 0 auto;">
+                            <canvas id="allocationChart" width="300" height="150"></canvas>
+                        </div>
+                        <div id="allocationDetails"></div>
+                    </div>
+                </div>
+
+                <!-- Fund Recommendations -->
+                <div id="fundRecommendations"></div>
+
+                <!-- Detailed Analysis -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-file-alt"></i> Detailed Analysis</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="detailedAnalysis"></div>
+                    </div>
+                </div>
+
+                <!-- Download Report -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-download"></i> Download Your Report</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="mb-3">Download your personalized mutual fund recommendation report as a PDF</p>
+                        <button class="btn btn-primary btn-lg" id="downloadPdfBtn">
+                            <i class="fas fa-file-pdf"></i> Download PDF Report
+                        </button>
+                        <div id="pdfProgress" class="mt-3" style="display: none;">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+                            </div>
+                            <small class="text-muted">Generating high-quality PDF...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
-        // --- Navigation Logic ---
-        const inputForm = document.getElementById('inputForm');
-        const topFundsSection = document.getElementById('topFundsSection');
-        const resultsSection = document.getElementById('resultsSection');
-        const loadingSection = document.getElementById('loading');
-        document.getElementById('personalizedBtn').addEventListener('click', () => { inputForm.style.display = 'block'; topFundsSection.style.display = 'none'; resultsSection.style.display = 'none'; });
-        document.getElementById('topFundsBtn').addEventListener('click', () => { inputForm.style.display = 'none'; topFundsSection.style.display = 'block'; resultsSection.style.display = 'none'; loadTopFunds('large_cap'); });
+        let allocationChart = null;
 
-        // --- Top Funds Logic ---
-        document.querySelectorAll('input[name="fundCategory"]').forEach(radio => radio.addEventListener('change', (e) => loadTopFunds(e.target.value)));
+        // Navigation functionality
+        document.getElementById('personalizedBtn').addEventListener('click', function() {
+            document.getElementById('inputForm').style.display = 'block';
+            document.getElementById('topFundsSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('loading').style.display = 'none';
+        });
+
+        document.getElementById('topFundsBtn').addEventListener('click', function() {
+            document.getElementById('inputForm').style.display = 'none';
+            document.getElementById('topFundsSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('loading').style.display = 'none';
+            loadTopFunds('large_cap'); // Load default category
+        });
+
+        // Top funds category selection
+        document.querySelectorAll('input[name="fundCategory"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                loadTopFunds(this.value);
+            });
+        });
+
+        // Load top funds for selected category
         async function loadTopFunds(category) {
-            const contentDiv = document.getElementById('topFundsContent');
-            contentDiv.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
             try {
-                const response = await fetch('/top-funds', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ category }) });
+                const response = await fetch('/top-funds', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ category: category })
+                });
+
                 const data = await response.json();
-                if (data.success) { displayTopFunds(data.funds); } 
-                else { contentDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${data.error}</div>`; }
-            } catch (error) { contentDiv.innerHTML = `<div class="alert alert-danger">Network error: ${error.message}</div>`; }
-        }
-        function displayTopFunds(funds) {
-            const container = document.getElementById('topFundsContent');
-            if (!funds || funds.length === 0) { container.innerHTML = '<p class="text-center">No funds found.</p>'; return; }
-            container.innerHTML = funds.map((fund, index) => `
-                <div class="fund-card p-3 mb-2"><h6><span class="badge bg-primary me-2">#${index+1}</span>${fund.name||'N/A'}</h6><div>
-                <span class="metric-badge">5Y: ${fund.sip_5yr_return?.toFixed(2)??'N/A'}%</span>
-                <span class="metric-badge">Expense: ${fund.expense_ratio?.toFixed(2)??'N/A'}%</span>
-                <span class="metric-badge">Score: ${fund.score?.toFixed(2)??'N/A'}</span>
-                <a href="${fund.grow_url||'#'}" target="_blank" class="btn btn-sm btn-success float-end">View</a></div></div>`).join('');
+                if (data.success) {
+                    displayTopFunds(data.funds, category);
+                } else {
+                    document.getElementById('topFundsContent').innerHTML = '<p class="text-danger">Error loading funds: ' + data.error + '</p>';
+                }
+            } catch (error) {
+                document.getElementById('topFundsContent').innerHTML = '<p class="text-danger">Error: ' + error.message + '</p>';
+            }
         }
 
-        // --- Main Form Submission ---
-        document.getElementById('recommendationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            inputForm.style.display = 'none';
-            loadingSection.style.display = 'block';
-            resultsSection.style.display = 'none';
+        // Display top funds
+        function displayTopFunds(funds, category) {
+            const container = document.getElementById('topFundsContent');
+            let html = `<h6 class="mb-3">Top 5 ${category.replace('_', ' ').toUpperCase()} Funds</h6>`;
+
+            funds.forEach((fund, index) => {
+                html += `
+                    <div class="fund-card p-3 mb-3" style="border: 2px solid #e9ecef; border-radius: 15px; background: white;">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6><span class="badge bg-primary me-2">#${index + 1}</span>${fund.name}</h6>
+                                <div class="fund-manager">
+                                    <i class="fas fa-user-tie"></i> Fund Manager: ${fund.fund_manager}
+                                </div>
+                                <div class="mt-2">
+                                    <span class="metric-badge">AUM: ₹${(fund.aum_cr / 1000).toFixed(1)}K Cr</span>
+                                    <span class="metric-badge">Expense: ${fund.expense_ratio}%</span>
+                                    <span class="metric-badge">5Y Return: ${fund.sip_5yr_return}%</span>
+                                    <span class="metric-badge">10Y Return: ${fund.sip_10yr_return}%</span>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="metric-badge">Alpha: ${fund.alpha}</span>
+                                    <span class="metric-badge">Beta: ${fund.beta}</span>
+                                    <span class="metric-badge">Sharpe: ${fund.sharpe_ratio}</span>
+                                    <span class="metric-badge">Sortino: ${fund.sortino_ratio}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="mb-2">
+                                    <strong>NAV:</strong> ₹${fund.nav}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Min Investment:</strong> ₹${fund.min_investment.toLocaleString()}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Score:</strong> ${fund.score.toFixed(2)}
+                                </div>
+                                <div class="mt-3">
+                                    <a href="${fund.grow_url}" target="_blank" class="btn btn-success btn-sm">
+                                        <i class="fas fa-external-link-alt"></i> View on GROW
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // PDF Download functionality
+        document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+            // Check if results are available
+            if (!document.getElementById('resultsSection').children.length || 
+                document.getElementById('resultsSection').style.display === 'none') {
+                alert('Please generate recommendations first before downloading the PDF.');
+                return;
+            }
+            downloadPDF();
+        });
+
+        async function downloadPDF() {
+            try {
+                // Show loading state
+                const btn = document.getElementById('downloadPdfBtn');
+                const progressDiv = document.getElementById('pdfProgress');
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+                btn.disabled = true;
+                progressDiv.style.display = 'block';
+
+                // Create a clean version for PDF
+                const pdfElement = createPDFVersion();
+                
+                const opt = {
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: 'mutual-fund-report.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#ffffff'
+                    },
+                    jsPDF: { 
+                        unit: 'in', 
+                        format: 'a4', 
+                        orientation: 'portrait',
+                        compress: true
+                    }
+                };
+
+                await html2pdf().set(opt).from(pdfElement).save();
+                
+                // Clean up
+                document.body.removeChild(pdfElement);
+                
+            } catch (error) {
+                console.error('PDF Generation Error:', error);
+                alert('Error generating PDF: ' + error.message);
+            } finally {
+                // Restore button and hide progress
+                const btn = document.getElementById('downloadPdfBtn');
+                const progressDiv = document.getElementById('pdfProgress');
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                progressDiv.style.display = 'none';
+            }
+        }
+
+        function createPDFVersion() {
+            // Clone the results section
+            const originalElement = document.getElementById('resultsSection');
+            const pdfElement = originalElement.cloneNode(true);
             
-            // --- Collect ALL data from the detailed form ---
+            // Add PDF header
+            const header = document.createElement('div');
+            header.innerHTML = `
+                <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #333; padding-bottom: 20px;">
+                    <h2 style="color: #333; margin: 0; font-size: 24px; font-weight: bold;">Mutual Fund Investment Report</h2>
+                    <p style="color: #666; margin: 10px 0 0 0; font-size: 14px;">Generated on ${new Date().toLocaleDateString('en-IN')} at ${new Date().toLocaleTimeString('en-IN')}</p>
+                </div>
+            `;
+            pdfElement.insertBefore(header, pdfElement.firstChild);
+            
+            // Add PDF footer
+            const footer = document.createElement('div');
+            footer.innerHTML = `
+                <div style="text-align: center; margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px; color: #666; font-size: 12px;">
+                    <p style="margin: 0;">This report is generated by Your Mutual Fund Advisor</p>
+                    <p style="margin: 5px 0 0 0;">For investment decisions, please consult with a financial advisor</p>
+                </div>
+            `;
+            pdfElement.appendChild(footer);
+            
+            // Add PDF-specific styling
+            pdfElement.style.cssText = `
+                background: white !important;
+                color: black !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 12px !important;
+                line-height: 1.4 !important;
+                padding: 20px !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+                box-shadow: none !important;
+                border: none !important;
+            `;
+
+            // Remove interactive elements and buttons
+            const buttons = pdfElement.querySelectorAll('button, .btn');
+            buttons.forEach(btn => btn.remove());
+
+            // Remove download section
+            const downloadSection = pdfElement.querySelector('.card:last-child');
+            if (downloadSection) downloadSection.remove();
+
+            // Style all cards for PDF
+            const cards = pdfElement.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.cssText = `
+                    border: 2px solid #333 !important;
+                    margin-bottom: 20px !important;
+                    page-break-inside: avoid !important;
+                    background: white !important;
+                `;
+                
+                // Style card headers
+                const header = card.querySelector('.card-header');
+                if (header) {
+                    header.style.cssText = `
+                        background: #f8f9fa !important;
+                        color: #333 !important;
+                        border-bottom: 2px solid #333 !important;
+                        padding: 10px 15px !important;
+                        font-weight: bold !important;
+                    `;
+                }
+                
+                // Style card body
+                const body = card.querySelector('.card-body');
+                if (body) {
+                    body.style.cssText = `
+                        padding: 15px !important;
+                        background: white !important;
+                    `;
+                }
+            });
+
+            // Style text elements
+            const textElements = pdfElement.querySelectorAll('p, span, div, h5, h6');
+            textElements.forEach(el => {
+                if (el.tagName === 'H5' || el.tagName === 'H6') {
+                    el.style.cssText = `
+                        color: #333 !important;
+                        font-weight: bold !important;
+                        margin-bottom: 10px !important;
+                        font-size: 14px !important;
+                    `;
+                } else {
+                    el.style.cssText = `
+                        color: #333 !important;
+                        margin-bottom: 8px !important;
+                    `;
+                }
+            });
+
+            // Style tables if they exist
+            const tables = pdfElement.querySelectorAll('table');
+            tables.forEach(table => {
+                table.style.cssText = `
+                    border-collapse: collapse !important;
+                    width: 100% !important;
+                    margin-bottom: 15px !important;
+                    font-size: 11px !important;
+                `;
+                
+                const cells = table.querySelectorAll('td, th');
+                cells.forEach(cell => {
+                    cell.style.cssText = `
+                        border: 1px solid #333 !important;
+                        padding: 6px 8px !important;
+                        text-align: left !important;
+                        vertical-align: top !important;
+                    `;
+                });
+                
+                // Style table headers
+                const headers = table.querySelectorAll('th');
+                headers.forEach(header => {
+                    header.style.cssText = `
+                        background: #f8f9fa !important;
+                        font-weight: bold !important;
+                        border: 1px solid #333 !important;
+                        padding: 8px !important;
+                        text-align: left !important;
+                    `;
+                });
+            });
+
+            // Handle charts for PDF
+            const charts = pdfElement.querySelectorAll('canvas');
+            charts.forEach(canvas => {
+                // Convert canvas to image for better PDF rendering
+                try {
+                    const ctx = canvas.getContext('2d');
+                    const dataURL = canvas.toDataURL('image/png');
+                    const img = document.createElement('img');
+                    img.src = dataURL;
+                    img.style.cssText = `
+                        max-width: 100% !important;
+                        height: auto !important;
+                        display: block !important;
+                        margin: 10px auto !important;
+                    `;
+                    canvas.parentNode.replaceChild(img, canvas);
+                } catch (e) {
+                    console.log('Chart conversion failed:', e);
+                }
+            });
+
+            // Add page breaks where appropriate
+            const sections = pdfElement.querySelectorAll('.card');
+            sections.forEach((section, index) => {
+                if (index > 0 && index % 2 === 0) {
+                    section.style.pageBreakBefore = 'always';
+                }
+            });
+
+            // Add to body temporarily (hidden)
+            pdfElement.style.position = 'absolute';
+            pdfElement.style.left = '-9999px';
+            pdfElement.style.top = '0';
+            document.body.appendChild(pdfElement);
+
+            return pdfElement;
+        }
+
+        document.getElementById('recommendationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validate that at least one investment type is provided
+            const lumpsumInvestment = parseFloat(document.getElementById('lumpsumInvestment').value) || 0;
+            const sipInvestment = parseFloat(document.getElementById('sipInvestment').value) || 0;
+            
+            if (lumpsumInvestment === 0 && sipInvestment === 0) {
+                alert('Please provide either a lumpsum investment amount or monthly SIP investment amount.');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('inputForm').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+
+            // Collect form data
             const formData = {
                 name: document.getElementById('name').value,
-                age: document.getElementById('age').value,
-                annual_income: document.getElementById('annualIncome').value,
-                investment_amount: document.getElementById('investmentAmount').value,
+                age: parseInt(document.getElementById('age').value),
+                annual_income: parseFloat(document.getElementById('annualIncome').value),
+                investment_amount: parseFloat(document.getElementById('investmentAmount').value),
                 risk_tolerance: document.getElementById('riskTolerance').value,
                 investment_goal: document.getElementById('investmentGoal').value,
                 investment_horizon: document.getElementById('investmentHorizon').value,
-                monthly_sip: document.getElementById('monthlySIP').value,
-                existing_investments: document.getElementById('existingInvestments').value,
-                tax_bracket: document.getElementById('taxBracket').value,
+                monthly_sip: parseFloat(document.getElementById('monthlySIP').value) || 0,
+                existing_investments: parseFloat(document.getElementById('existingInvestments').value) || 0,
+                tax_bracket: parseInt(document.getElementById('taxBracket').value),
                 emergency_fund: document.getElementById('emergencyFund').value,
                 fund_type_preference: document.getElementById('fundTypePreference').value,
                 esg_preference: document.getElementById('esgPreference').value,
                 dividend_preference: document.getElementById('dividendPreference').value,
+                lumpsum_investment: parseFloat(document.getElementById('lumpsumInvestment').value) || 0,
+                sip_investment: parseFloat(document.getElementById('sipInvestment').value) || 0
             };
 
             try {
-                const response = await fetch('/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
                 const data = await response.json();
-                displayResults(data);
+
+                if (data.success) {
+                    displayResults(data);
+                } else {
+                    alert('Error: ' + data.error);
+                }
             } catch (error) {
-                displayResults({ success: false, error: `Network error: ${error.message}` });
+                alert('Error: ' + error.message);
             } finally {
-                loadingSection.style.display = 'none';
-                resultsSection.style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('resultsSection').style.display = 'block';
             }
         });
 
-        // --- Bulletproof Results Display Function ---
         function displayResults(data) {
-            const container = document.getElementById('resultsSection');
-            if (data.success !== true) {
-                let errorMessage = `<p><strong>Error:</strong> ${data.error || 'Unknown error.'}</p>`;
-                if (data.debug_traceback) { errorMessage += `<h6>Details:</h6><pre>${data.debug_traceback}</pre>`; }
-                container.innerHTML = `<div class="card"><div class="card-header bg-danger text-white"><h5>Application Error</h5></div><div class="card-body">${errorMessage}</div></div>`;
+            // Display user info
+            document.getElementById('userName').textContent = data.user_info.name;
+            document.getElementById('userAge').textContent = data.user_info.age;
+            document.getElementById('userIncome').textContent = data.user_info.annual_income.toLocaleString();
+            document.getElementById('userInvestment').textContent = data.user_info.investment_amount.toLocaleString();
+            document.getElementById('userRisk').textContent = data.user_info.risk_tolerance;
+            document.getElementById('userHorizon').textContent = data.user_info.investment_horizon;
+
+            // Display risk profile
+            const riskProfile = document.getElementById('riskProfile');
+            riskProfile.textContent = `Risk Profile: ${data.recommendations.risk_profile.toUpperCase()}`;
+            riskProfile.className = `risk-profile risk-${data.recommendations.risk_profile}`;
+
+            // Display AI summary
+            document.getElementById('aiSummary').innerHTML = data.llm_analysis.summary;
+
+            // Display key insights
+            const insightsHtml = data.llm_analysis.key_insights.map(insight => 
+                `<div class="insight-card"><i class="fas fa-star"></i> ${insight}</div>`
+            ).join('');
+            document.getElementById('keyInsights').innerHTML = insightsHtml;
+
+            // Create allocation chart
+            console.log('About to create chart with data:', data.llm_analysis.suggested_allocations);
+            createAllocationChart(data.llm_analysis.suggested_allocations);
+
+            // Display allocation details
+            displayAllocationDetails(data.llm_analysis.suggested_allocations);
+
+            // Display fund recommendations
+            displayFundRecommendations(data.recommendations.recommendations);
+
+            // Display advanced analysis
+            displayAdvancedAnalysis(data.recommendations.advanced_analysis);
+
+            // Display detailed analysis
+            displayDetailedAnalysis(data.llm_analysis.sections);
+        }
+
+        function createAllocationChart(allocations) {
+            console.log('Creating allocation chart with data:', allocations);
+            
+            const canvas = document.getElementById('allocationChart');
+            if (!canvas) {
+                console.error('Canvas element not found!');
                 return;
             }
-            const { user_info = {}, recommendations = {}, llm_analysis = {} } = data;
-            const riskValue = recommendations.risk_profile;
-            let html = `
-                <div class="card"><div class="card-header"><h5><i class="fas fa-user"></i> Your Profile</h5></div><div class="card-body">
-                <p><strong>Name:</strong> ${user_info.name||'N/A'}</p>
-                <p><strong>Investment:</strong> ₹${user_info.investment_amount?.toLocaleString()||'N/A'}</p>
-                ${riskValue ? `<div class="risk-profile risk-${riskValue}">${riskValue.toUpperCase()} RISK</div>` : ''}</div></div>
-                <div class="card"><div class="card-header"><h5><i class="fas fa-brain"></i> AI Summary</h5></div><div class="card-body">${llm_analysis.summary||'<p>Summary not available.</p>'}</div></div>`;
-            if (llm_analysis.key_insights && llm_analysis.key_insights.length > 0) {
-                html += `<div class="card"><div class="card-header"><h5><i class="fas fa-lightbulb"></i> Insights</h5></div><div class="card-body">
-                ${llm_analysis.key_insights.map(insight => `<div class="insight-card p-3 mb-2">${insight}</div>`).join('')}</div></div>`;
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                console.error('Could not get 2D context!');
+                return;
             }
-            if (recommendations.recommendations) {
-                html += `<div class="card"><div class="card-header"><h5><i class="fas fa-stream"></i> Recommended Funds</h5></div><div class="card-body">`;
-                for (const [category, funds] of Object.entries(recommendations.recommendations)) {
-                    if (funds && funds.length > 0) {
-                        html += `<h6>${category.replace(/_/g, ' ').toUpperCase()}</h6>`;
-                        html += funds.map(fund => `<div class="fund-card p-3 mb-2"><strong>${fund.name||'N/A'}</strong><div>
-                        <span class="metric-badge">5Y: ${fund.sip_5yr_return?.toFixed(2)??'N/A'}%</span>
-                        <span class="metric-badge">Exp: ${fund.expense_ratio?.toFixed(2)??'N/A'}%</span>
-                        <a href="${fund.grow_url||'#'}" target="_blank" class="btn btn-sm btn-success float-end">View</a></div></div>`).join('');
+            
+            if (allocationChart) {
+                allocationChart.destroy();
+            }
+
+            const labels = Object.keys(allocations).map(key => key.replace('_', ' ').toUpperCase());
+            const data = Object.values(allocations).map(item => item.percentage);
+            const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
+
+            console.log('Chart data:', { labels, data, colors });
+
+            allocationChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
-                html += `</div></div>`;
-            }
+            });
+            
+            console.log('Chart created successfully!');
+        }
+
+        function displayAllocationDetails(allocations) {
+            const detailsHtml = Object.entries(allocations).map(([category, data]) => `
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>${category.replace('_', ' ').toUpperCase()}</strong>
+                    </div>
+                    <div class="col-md-4">
+                        ${data.percentage}%
+                    </div>
+                    <div class="col-md-4">
+                        ₹${data.amount.toLocaleString()}
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('allocationDetails').innerHTML = detailsHtml;
+        }
+
+        function displayFundRecommendations(recommendations) {
+            const container = document.getElementById('fundRecommendations');
+            let html = '';
+
+            Object.entries(recommendations).forEach(([category, funds]) => {
+                if (funds.length > 0) {
+                    html += `
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-chart-pie"></i> ${category.replace('_', ' ').toUpperCase()} Funds</h5>
+                            </div>
+                            <div class="card-body">
+                    `;
+
+                    funds.forEach((fund, index) => {
+                        html += `
+                            <div class="fund-card p-3">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6>${index + 1}. ${fund.name}</h6>
+                                        <div class="fund-manager">
+                                            <i class="fas fa-user-tie"></i> Fund Manager: ${fund.fund_manager}
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="metric-badge">AUM: ₹${(fund.aum_cr / 1000).toFixed(1)}K Cr</span>
+                                            <span class="metric-badge">Expense: ${fund.expense_ratio}%</span>
+                                            <span class="metric-badge">5Y Return: ${fund.sip_5yr_return}%</span>
+                                            <span class="metric-badge">10Y Return: ${fund.sip_10yr_return}%</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="metric-badge">Alpha: ${fund.alpha}</span>
+                                            <span class="metric-badge">Beta: ${fund.beta}</span>
+                                            <span class="metric-badge">Sharpe: ${fund.sharpe_ratio}</span>
+                                            <span class="metric-badge">Sortino: ${fund.sortino_ratio}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="metric-badge">ESG Score: ${fund.esg_score || 'N/A'}/10</span>
+                                            <span class="volatility-indicator volatility-${fund.volatility_rank || 'moderate'}">${(fund.volatility_rank || 'moderate').toUpperCase()}</span>
+                                            <span class="metric-badge">Peer Rank: ${fund.peer_rank || 'N/A'}</span>
+                                        </div>
+                                    </div>
+                                                                         <div class="col-md-4 text-end">
+                                         <div class="mb-2">
+                                             <strong>NAV:</strong> ₹${fund.nav}
+                                         </div>
+                                         <div class="mb-2">
+                                             <strong>Min Investment:</strong> ₹${fund.min_investment.toLocaleString()}
+                                         </div>
+                                         <div class="mb-2">
+                                             <strong>Score:</strong> ${fund.score.toFixed(2)}
+                                         </div>
+                                         <div class="mt-3">
+                                             <a href="${fund.grow_url}" target="_blank" class="btn btn-success btn-sm">
+                                                 <i class="fas fa-external-link-alt"></i> View on GROW
+                                             </a>
+                                         </div>
+                                     </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
             container.innerHTML = html;
         }
+
+        function displayDetailedAnalysis(sections) {
+            const container = document.getElementById('detailedAnalysis');
+            let html = '';
+
+            Object.entries(sections).forEach(([sectionName, content]) => {
+                if (content && sectionName !== 'full_analysis') {
+                    const title = sectionName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    html += `
+                        <div class="mb-4">
+                            <h6><strong>${title}</strong></h6>
+                            <p>${content}</p>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function displayAdvancedAnalysis(advancedAnalysis) {
+            const container = document.getElementById('fundRecommendations');
+            
+            // Add advanced analysis sections before fund recommendations
+            let advancedHtml = '';
+
+            // Investment Projections
+            if (advancedAnalysis.projections && Object.keys(advancedAnalysis.projections).length > 0) {
+                const proj = advancedAnalysis.projections;
+                advancedHtml += `
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-line"></i> Investment Projections</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="projection-card">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6><strong>Monthly SIP:</strong> ₹${proj.monthly_sip.toLocaleString()}</h6>
+                                        <h6><strong>Total Investment:</strong> ₹${proj.total_investment.toLocaleString()}</h6>
+                                        <h6><strong>Expected Return:</strong> ${proj.expected_return}%</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6><strong>Time Period:</strong> ${proj.time_period} years</h6>
+                                        <h6><strong>Projected Value:</strong> ₹${proj.projected_value.toLocaleString()}</h6>
+                                        <h6><strong>Wealth Multiplier:</strong> ${(proj.projected_value / proj.total_investment).toFixed(2)}x</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Diversification Score
+            if (advancedAnalysis.diversification_score) {
+                const div = advancedAnalysis.diversification_score;
+                advancedHtml += `
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-balance-scale"></i> Portfolio Diversification</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="diversification-score">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6><strong>Diversification Score:</strong> ${div.score}/150</h6>
+                                        <h6><strong>Categories:</strong> ${div.categories}</h6>
+                                        <h6><strong>Total Funds:</strong> ${div.total_funds}</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6><strong>Assessment:</strong></h6>
+                                        <p>${div.assessment}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Expense Impact Analysis
+            if (advancedAnalysis.expense_impact) {
+                const exp = advancedAnalysis.expense_impact;
+                advancedHtml += `
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-calculator"></i> Expense Impact Analysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="expense-impact">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6><strong>Average Expense Ratio:</strong> ${exp.average_expense_ratio}%</h6>
+                                        <h6><strong>Total Expense Over Period:</strong> ₹${exp.total_expense_over_period.toLocaleString()}</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6><strong>Potential Savings:</strong> ₹${exp.potential_savings.toLocaleString()}</h6>
+                                        <h6><strong>Assessment:</strong> ${exp.impact_assessment}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Volatility Analysis
+            if (advancedAnalysis.volatility_analysis) {
+                const vol = advancedAnalysis.volatility_analysis;
+                advancedHtml += `
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-area"></i> Volatility Analysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><strong>Volatility Breakdown:</strong></h6>
+                                    <p>Low: ${vol.volatility_breakdown.low} | Moderate: ${vol.volatility_breakdown.moderate} | High: ${vol.volatility_breakdown.high}</p>
+                                    <h6><strong>High Volatility:</strong> ${vol.high_volatility_percentage.toFixed(1)}%</h6>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><strong>Risk Assessment:</strong></h6>
+                                    <p>${vol.risk_assessment}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Risk Warnings
+            if (advancedAnalysis.risk_warnings && advancedAnalysis.risk_warnings.length > 0) {
+                advancedHtml += `
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Risk Warnings</h5>
+                        </div>
+                        <div class="card-body">
+                            ${advancedAnalysis.risk_warnings.map(warning => `
+                                <div class="risk-warning">
+                                    <p><i class="fas fa-exclamation-circle"></i> ${warning}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Peer Comparison
+            if (advancedAnalysis.peer_comparison) {
+                advancedHtml += `
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-trophy"></i> Peer Comparison</h5>
+                        </div>
+                        <div class="card-body">
+                            ${Object.entries(advancedAnalysis.peer_comparison).map(([category, comp]) => `
+                                <div class="peer-comparison">
+                                    <h6><strong>${category.replace('_', ' ').toUpperCase()}:</strong> ${comp.fund_name}</h6>
+                                    <p><strong>Peer Rank:</strong> ${comp.peer_rank} | <strong>Risk-Adjusted Return:</strong> ${comp.risk_adjusted_return}%</p>
+                                    <p><strong>ESG Score:</strong> ${comp.esg_score}/10 | <strong>Diversification Score:</strong> ${comp.diversification_score}/100</p>
+                                    <p><strong>Why Better:</strong> ${comp.why_better}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Insert advanced analysis before existing content
+            container.innerHTML = advancedHtml + container.innerHTML;
+        }
     </script>
+    
+    <!-- Tax Rebate Information -->
+    <div class="container mt-4 mb-3">
+        <div class="row">
+            <div class="col-12">
+                <p class="text-muted" style="font-size: 0.8rem; text-align: center; margin-bottom: 0;">
+                    * Rebate under Section 87A is available for income up to Rs. 12 lakh, meaning taxpayers with total income not exceeding Rs. 12 lakh have zero tax liability.
+                </p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
