@@ -33,8 +33,8 @@
             <!-- Header -->
             <div class="header">
                 <h1><i class="fas fa-chart-line"></i> Your Mutual Fund Advisor</h1>
-                <p>Get personalized mutual fund recommendations based on your profile.</p>
-                 <p class="mb-0 mt-2">Made with💝, by Rupam</p>
+                <p>Get personalized mutual fund recommendations based on your complete profile.</p>
+                <p class="mb-0 mt-2">Made with💝, by Rupam</p>
             </div>
 
             <!-- Navigation -->
@@ -45,50 +45,46 @@
                 </div>
             </div>
 
-            <!-- Input Form Section (FULL VERSION) -->
+            <!-- Input Form Section (FULL DETAILED VERSION) -->
             <div class="form-section" id="inputForm">
                 <form id="recommendationForm">
-                    <div class="row">
+                     <div class="row">
                         <div class="col-md-6 mb-3"><label for="name" class="form-label">Full Name</label><input type="text" class="form-control" id="name" required></div>
                         <div class="col-md-6 mb-3"><label for="age" class="form-label">Age</label><input type="number" class="form-control" id="age" min="18" max="100" required></div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3"><label for="annualIncome" class="form-label">Annual Income (₹)</label><input type="number" class="form-control" id="annualIncome" min="100000" required></div>
-                        <div class="col-md-6 mb-3"><label for="investmentAmount" class="form-label">Lumpsum Investment Amount (₹)</label><input type="number" class="form-control" id="investmentAmount" min="1000" value="50000" required></div>
+                        <div class="col-md-6 mb-3"><label for="investmentAmount" class="form-label">Total Lumpsum Investment (₹)</label><input type="number" class="form-control" id="investmentAmount" min="1000" required></div>
                     </div>
                     <div class="row">
-                         <div class="col-md-6 mb-3"><label for="riskTolerance" class="form-label">Risk Appetite</label><select class="form-select" id="riskTolerance"><option value="low">Conservative (Low Risk)</option><option value="moderate" selected>Moderate</option><option value="high">Aggressive (High Risk)</option></select></div>
-                         <div class="col-md-6 mb-3"><label for="investmentGoal" class="form-label">Primary Investment Goal</label><select class="form-select" id="investmentGoal"><option value="retirement">Retirement</option><option value="child_education">Child's Education</option><option value="wealth_creation" selected>Wealth Creation</option><option value="tax_saving">Tax Saving (ELSS)</option></select></div>
+                         <div class="col-md-6 mb-3"><label for="riskTolerance" class="form-label">Risk Appetite</label><select class="form-select" id="riskTolerance"><option value="low">Conservative</option><option value="moderate" selected>Moderate</option><option value="high">Aggressive</option></select></div>
+                         <div class="col-md-6 mb-3"><label for="investmentGoal" class="form-label">Investment Goal</label><select class="form-select" id="investmentGoal"><option value="retirement">Retirement Planning</option><option value="child_education">Child Education</option><option value="wealth_creation" selected>Wealth Creation</option><option value="tax_saving">Tax Saving</option></select></div>
                     </div>
+                     <div class="row">
+                         <div class="col-md-6 mb-3"><label for="investmentHorizon" class="form-label">Investment Horizon (Years)</label><select class="form-select" id="investmentHorizon"><option value="1-3">1-3 years</option><option value="3-5">3-5 years</option><option value="5-10" selected>5-10 years</option><option value="10+">10+ years</option></select></div>
+                         <div class="col-md-6 mb-3"><label for="monthlySIP" class="form-label">Monthly SIP Budget (₹)</label><input type="number" class="form-control" id="monthlySIP" min="500" placeholder="e.g., 5000"></div>
+                     </div>
+                     <div class="row">
+                         <div class="col-md-6 mb-3"><label for="existingInvestments" class="form-label">Existing Investments (₹)</label><input type="number" class="form-control" id="existingInvestments" value="0" min="0"></div>
+                         <div class="col-md-6 mb-3"><label for="taxBracket" class="form-label">Tax Bracket</label><select class="form-select" id="taxBracket"><option value="0">0%</option><option value="10">10%</option><option value="20">20%</option><option value="30" selected>30%</option></select></div>
+                     </div>
+                     <div class="row">
+                         <div class="col-md-6 mb-3"><label for="emergencyFund" class="form-label">Emergency Fund Status</label><select class="form-select" id="emergencyFund"><option value="yes" selected>Fully funded</option><option value="no">Need to build</option><option value="partial">Partially funded</option></select></div>
+                         <div class="col-md-6 mb-3"><label for="fundTypePreference" class="form-label">Fund Plan Preference</label><select class="form-select" id="fundTypePreference"><option value="direct" selected>Direct Plan</option><option value="regular">Regular Plan</option></select></div>
+                     </div>
+                     <div class="row">
+                         <div class="col-md-6 mb-3"><label for="esgPreference" class="form-label">ESG Preference</label><select class="form-select" id="esgPreference"><option value="no_preference" selected>No preference</option><option value="esg_focused">ESG-focused</option></select></div>
+                         <div class="col-md-6 mb-3"><label for="dividendPreference" class="form-label">Dividend vs Growth</label><select class="form-select" id="dividendPreference"><option value="growth" selected>Growth</option><option value="dividend">Dividend</option></select></div>
+                     </div>
                     <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-magic"></i> Generate My Plan</button>
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-magic"></i> Get Recommendations</button>
                     </div>
                 </form>
             </div>
 
-            <!-- Loading Section -->
-            <div class="loading" id="loading">
-                <div class="spinner mb-3"></div>
-                <h4>Analyzing your profile and generating your personalized plan...</h4>
-            </div>
-            
-            <!-- Top 5 Funds Section -->
-            <div class="top-funds-section" id="topFundsSection" style="display: none;">
-                <div class="card">
-                    <div class="card-header"><h5><i class="fas fa-trophy"></i> Top 5 Mutual Funds</h5></div>
-                    <div class="card-body">
-                        <div class="btn-group w-100 mb-3" role="group">
-                            <input type="radio" class="btn-check" name="fundCategory" id="largeCap" value="large_cap" checked><label class="btn btn-outline-primary" for="largeCap">Large Cap</label>
-                            <input type="radio" class="btn-check" name="fundCategory" id="midCap" value="mid_cap"><label class="btn btn-outline-primary" for="midCap">Mid Cap</label>
-                            <input type="radio" class="btn-check" name="fundCategory" id="flexiCap" value="flexi_cap"><label class="btn btn-outline-primary" for="flexiCap">Flexi Cap</label>
-                            <input type="radio" class="btn-check" name="fundCategory" id="smallCap" value="small_cap"><label class="btn btn-outline-primary" for="smallCap">Small Cap</label>
-                        </div>
-                        <div id="topFundsContent"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Results Section -->
+            <!-- All other sections (Loading, Top Funds, Results) remain the same -->
+            <div class="loading" id="loading"><div class="spinner mb-3"></div><h4>Analyzing your profile...</h4></div>
+            <div class="top-funds-section" id="topFundsSection" style="display: none;"><div class="card"><div class="card-header"><h5><i class="fas fa-trophy"></i> Top 5 Mutual Funds</h5></div><div class="card-body"><div class="btn-group w-100 mb-3" role="group"><input type="radio" class="btn-check" name="fundCategory" id="largeCap" value="large_cap" checked><label class="btn btn-outline-primary" for="largeCap">Large</label><input type="radio" class="btn-check" name="fundCategory" id="midCap" value="mid_cap"><label class="btn btn-outline-primary" for="midCap">Mid</label><input type="radio" class="btn-check" name="fundCategory" id="flexiCap" value="flexi_cap"><label class="btn btn-outline-primary" for="flexiCap">Flexi</label><input type="radio" class="btn-check" name="fundCategory" id="smallCap" value="small_cap"><label class="btn btn-outline-primary" for="smallCap">Small</label></div><div id="topFundsContent"></div></div></div></div>
             <div class="results-section" id="resultsSection" style="display: none;"></div>
         </div>
     </div>
@@ -101,61 +97,30 @@
         const topFundsSection = document.getElementById('topFundsSection');
         const resultsSection = document.getElementById('resultsSection');
         const loadingSection = document.getElementById('loading');
-
-        document.getElementById('personalizedBtn').addEventListener('click', () => {
-            inputForm.style.display = 'block';
-            topFundsSection.style.display = 'none';
-            resultsSection.style.display = 'none';
-        });
-
-        document.getElementById('topFundsBtn').addEventListener('click', () => {
-            inputForm.style.display = 'none';
-            topFundsSection.style.display = 'block';
-            resultsSection.style.display = 'none';
-            loadTopFunds('large_cap');
-        });
+        document.getElementById('personalizedBtn').addEventListener('click', () => { inputForm.style.display = 'block'; topFundsSection.style.display = 'none'; resultsSection.style.display = 'none'; });
+        document.getElementById('topFundsBtn').addEventListener('click', () => { inputForm.style.display = 'none'; topFundsSection.style.display = 'block'; resultsSection.style.display = 'none'; loadTopFunds('large_cap'); });
 
         // --- Top Funds Logic ---
-        document.querySelectorAll('input[name="fundCategory"]').forEach(radio => {
-            radio.addEventListener('change', (e) => loadTopFunds(e.target.value));
-        });
-
+        document.querySelectorAll('input[name="fundCategory"]').forEach(radio => radio.addEventListener('change', (e) => loadTopFunds(e.target.value)));
         async function loadTopFunds(category) {
             const contentDiv = document.getElementById('topFundsContent');
             contentDiv.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
             try {
-                const response = await fetch('/top-funds', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ category })
-                });
+                const response = await fetch('/top-funds', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ category }) });
                 const data = await response.json();
-                if (data.success) {
-                    displayTopFunds(data.funds);
-                } else {
-                    contentDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${data.error}</div>`;
-                }
-            } catch (error) {
-                contentDiv.innerHTML = `<div class="alert alert-danger">Network error: ${error.message}</div>`;
-            }
+                if (data.success) { displayTopFunds(data.funds); } 
+                else { contentDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${data.error}</div>`; }
+            } catch (error) { contentDiv.innerHTML = `<div class="alert alert-danger">Network error: ${error.message}</div>`; }
         }
-
         function displayTopFunds(funds) {
             const container = document.getElementById('topFundsContent');
-            if (!funds || funds.length === 0) {
-                container.innerHTML = '<p class="text-center">No funds found for this category.</p>';
-                return;
-            }
+            if (!funds || funds.length === 0) { container.innerHTML = '<p class="text-center">No funds found.</p>'; return; }
             container.innerHTML = funds.map((fund, index) => `
-                <div class="fund-card p-3 mb-2">
-                    <h6><span class="badge bg-primary me-2">#${index + 1}</span>${fund.name || 'N/A'}</h6>
-                    <div>
-                        <span class="metric-badge">5Y Return: ${fund.sip_5yr_return?.toFixed(2) ?? 'N/A'}%</span>
-                        <span class="metric-badge">Expense: ${fund.expense_ratio?.toFixed(2) ?? 'N/A'}%</span>
-                        <span class="metric-badge">Score: ${fund.score?.toFixed(2) ?? 'N/A'}</span>
-                        <a href="${fund.grow_url || '#'}" target="_blank" class="btn btn-sm btn-success float-end">View</a>
-                    </div>
-                </div>`).join('');
+                <div class="fund-card p-3 mb-2"><h6><span class="badge bg-primary me-2">#${index+1}</span>${fund.name||'N/A'}</h6><div>
+                <span class="metric-badge">5Y: ${fund.sip_5yr_return?.toFixed(2)??'N/A'}%</span>
+                <span class="metric-badge">Expense: ${fund.expense_ratio?.toFixed(2)??'N/A'}%</span>
+                <span class="metric-badge">Score: ${fund.score?.toFixed(2)??'N/A'}</span>
+                <a href="${fund.grow_url||'#'}" target="_blank" class="btn btn-sm btn-success float-end">View</a></div></div>`).join('');
         }
 
         // --- Main Form Submission ---
@@ -164,8 +129,8 @@
             inputForm.style.display = 'none';
             loadingSection.style.display = 'block';
             resultsSection.style.display = 'none';
-
-            // Collect all data from the full form
+            
+            // --- Collect ALL data from the detailed form ---
             const formData = {
                 name: document.getElementById('name').value,
                 age: document.getElementById('age').value,
@@ -173,18 +138,22 @@
                 investment_amount: document.getElementById('investmentAmount').value,
                 risk_tolerance: document.getElementById('riskTolerance').value,
                 investment_goal: document.getElementById('investmentGoal').value,
+                investment_horizon: document.getElementById('investmentHorizon').value,
+                monthly_sip: document.getElementById('monthlySIP').value,
+                existing_investments: document.getElementById('existingInvestments').value,
+                tax_bracket: document.getElementById('taxBracket').value,
+                emergency_fund: document.getElementById('emergencyFund').value,
+                fund_type_preference: document.getElementById('fundTypePreference').value,
+                esg_preference: document.getElementById('esgPreference').value,
+                dividend_preference: document.getElementById('dividendPreference').value,
             };
 
             try {
-                const response = await fetch('/analyze', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
+                const response = await fetch('/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
                 const data = await response.json();
                 displayResults(data);
             } catch (error) {
-                displayResults({ success: false, error: `A network error occurred: ${error.message}` });
+                displayResults({ success: false, error: `Network error: ${error.message}` });
             } finally {
                 loadingSection.style.display = 'none';
                 resultsSection.style.display = 'block';
@@ -194,62 +163,33 @@
         // --- Bulletproof Results Display Function ---
         function displayResults(data) {
             const container = document.getElementById('resultsSection');
-
-            // Failsafe: If backend reports an error, display it and stop.
             if (data.success !== true) {
-                let errorMessage = `<p><strong>Error:</strong> ${data.error || 'An unknown error occurred.'}</p>`;
-                if (data.debug_traceback) {
-                    errorMessage += `<h6>Technical Details:</h6><pre>${data.debug_traceback}</pre>`;
-                }
+                let errorMessage = `<p><strong>Error:</strong> ${data.error || 'Unknown error.'}</p>`;
+                if (data.debug_traceback) { errorMessage += `<h6>Details:</h6><pre>${data.debug_traceback}</pre>`; }
                 container.innerHTML = `<div class="card"><div class="card-header bg-danger text-white"><h5>Application Error</h5></div><div class="card-body">${errorMessage}</div></div>`;
                 return;
             }
-            
-            // If successful, safely render the data.
             const { user_info = {}, recommendations = {}, llm_analysis = {} } = data;
             const riskValue = recommendations.risk_profile;
-
             let html = `
-                <div class="card">
-                    <div class="card-header"><h5><i class="fas fa-user"></i> Your Profile</h5></div>
-                    <div class="card-body">
-                        <p><strong>Name:</strong> ${user_info.name || 'N/A'}</p>
-                        <p><strong>Investment:</strong> ₹${user_info.investment_amount?.toLocaleString() || 'N/A'}</p>
-                        ${riskValue ? `<div class="risk-profile risk-${riskValue}">${riskValue.toUpperCase()} RISK</div>` : ''}
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header"><h5><i class="fas fa-brain"></i> AI Summary</h5></div>
-                    <div class="card-body">${llm_analysis.summary || '<p>AI summary could not be generated.</p>'}</div>
-                </div>`;
-
+                <div class="card"><div class="card-header"><h5><i class="fas fa-user"></i> Profile</h5></div><div class="card-body">
+                <p><strong>Name:</strong> ${user_info.name||'N/A'}</p>
+                <p><strong>Investment:</strong> ₹${user_info.investment_amount?.toLocaleString()||'N/A'}</p>
+                ${riskValue ? `<div class="risk-profile risk-${riskValue}">${riskValue.toUpperCase()} RISK</div>` : ''}</div></div>
+                <div class="card"><div class="card-header"><h5><i class="fas fa-brain"></i> AI Summary</h5></div><div class="card-body">${llm_analysis.summary||'<p>Summary not available.</p>'}</div></div>`;
             if (llm_analysis.key_insights && llm_analysis.key_insights.length > 0) {
-                html += `
-                <div class="card">
-                    <div class="card-header"><h5><i class="fas fa-lightbulb"></i> Key Insights</h5></div>
-                    <div class="card-body">
-                        ${llm_analysis.key_insights.map(insight => `<div class="insight-card p-3 mb-2">${insight}</div>`).join('')}
-                    </div>
-                </div>`;
+                html += `<div class="card"><div class="card-header"><h5><i class="fas fa-lightbulb"></i> Insights</h5></div><div class="card-body">
+                ${llm_analysis.key_insights.map(insight => `<div class="insight-card p-3 mb-2">${insight}</div>`).join('')}</div></div>`;
             }
-
             if (recommendations.recommendations) {
-                html += `
-                <div class="card">
-                    <div class="card-header"><h5><i class="fas fa-stream"></i> Recommended Funds</h5></div>
-                    <div class="card-body">`;
+                html += `<div class="card"><div class="card-header"><h5><i class="fas fa-stream"></i> Funds</h5></div><div class="card-body">`;
                 for (const [category, funds] of Object.entries(recommendations.recommendations)) {
                     if (funds && funds.length > 0) {
                         html += `<h6>${category.replace(/_/g, ' ').toUpperCase()}</h6>`;
-                        html += funds.map(fund => `
-                            <div class="fund-card p-3 mb-2">
-                                <strong>${fund.name || 'Unnamed Fund'}</strong>
-                                <div>
-                                    <span class="metric-badge">5Y Return: ${fund.sip_5yr_return?.toFixed(2) ?? 'N/A'}%</span>
-                                    <span class="metric-badge">Expense: ${fund.expense_ratio?.toFixed(2) ?? 'N/A'}%</span>
-                                    <a href="${fund.grow_url || '#'}" target="_blank" class="btn btn-sm btn-success float-end">View</a>
-                                </div>
-                            </div>`).join('');
+                        html += funds.map(fund => `<div class="fund-card p-3 mb-2"><strong>${fund.name||'N/A'}</strong><div>
+                        <span class="metric-badge">5Y: ${fund.sip_5yr_return?.toFixed(2)??'N/A'}%</span>
+                        <span class="metric-badge">Exp: ${fund.expense_ratio?.toFixed(2)??'N/A'}%</span>
+                        <a href="${fund.grow_url||'#'}" target="_blank" class="btn btn-sm btn-success float-end">View</a></div></div>`).join('');
                     }
                 }
                 html += `</div></div>`;
