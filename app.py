@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 import traceback
 
+# Load environment variables first
 load_dotenv()
 
 from mutual_fund_analyzer import MutualFundAnalyzer
